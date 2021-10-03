@@ -1,0 +1,1112 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>Creating Custom Dataset using DETR | Explore Thoughts</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="Creating Custom Dataset using DETR" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="An approach for creating Dataset for Panoptic Segmentation using Pre Trained DETR." />
+<meta property="og:description" content="An approach for creating Dataset for Panoptic Segmentation using Pre Trained DETR." />
+<link rel="canonical" href="https://abdksyed.github.io/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/09/30/CustomDataset.html" />
+<meta property="og:url" content="https://abdksyed.github.io/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/09/30/CustomDataset.html" />
+<meta property="og:site_name" content="Explore Thoughts" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-09-30T00:00:00-05:00" />
+<script type="application/ld+json">
+{"datePublished":"2021-09-30T00:00:00-05:00","url":"https://abdksyed.github.io/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/09/30/CustomDataset.html","@type":"BlogPosting","headline":"Creating Custom Dataset using DETR","dateModified":"2021-09-30T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://abdksyed.github.io/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/09/30/CustomDataset.html"},"description":"An approach for creating Dataset for Panoptic Segmentation using Pre Trained DETR.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://abdksyed.github.io/blog/feed.xml" title="Explore Thoughts" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">Explore Thoughts</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About Me</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">Creating Custom Dataset using DETR</h1><p class="page-description">An approach for creating Dataset for Panoptic Segmentation using Pre Trained DETR.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-09-30T00:00:00-05:00" itemprop="datePublished">
+        Sep 30, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      11 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#Custom Dataset">Custom Dataset</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#Object Detection">Object Detection</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#Panoptic Segmentation">Panoptic Segmentation</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#COCO">COCO</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#DETR">DETR</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/abdksyed/blog/tree/master/_notebooks/2021-09-30-CustomDataset.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/abdksyed/blog/master?filepath=_notebooks%2F2021-09-30-CustomDataset.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/abdksyed/blog/blob/master/_notebooks/2021-09-30-CustomDataset.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#What-and-Why?">What and Why? </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Our-Classes-for-Things-and-Stuff">Our Classes for Things and Stuff </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#Things">Things </a></li>
+<li class="toc-entry toc-h3"><a href="#Stuff">Stuff </a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Annotations">Annotations </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Actual-Image">Actual Image </a></li>
+<li class="toc-entry toc-h2"><a href="#Our-Class-Annotation-(Segmentation-and-BBox)">Our Class Annotation (Segmentation and BBox) </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Model-Inference">Model Inference </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Attention-Maps">Attention Maps </a></li>
+<li class="toc-entry toc-h2"><a href="#DETR-Post-Processed-Mask">DETR Post-Processed Mask </a></li>
+<li class="toc-entry toc-h2"><a href="#Attention-Mask-ArgMax-Maps">Attention Mask ArgMax Maps </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#Final-JSON-for-All-Classes">Final JSON for All Classes </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#COCO-Format">COCO Format </a>
+<ul>
+<li class="toc-entry toc-h3"><a href="#File-Structure">File Structure </a></li>
+<li class="toc-entry toc-h3"><a href="#Object-Detection">Object Detection </a></li>
+<li class="toc-entry toc-h3"><a href="#Panoptic-Segmentation">Panoptic Segmentation </a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-09-30-CustomDataset.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="What-and-Why?">
+<a class="anchor" href="#What-and-Why?" aria-hidden="true"><span class="octicon octicon-link"></span></a>What and Why?<a class="anchor-link" href="#What-and-Why?"> </a>
+</h1>
+<p>We at <a href="https://theschoolof.ai/">TSAI</a> wanted to train a Panpotic Segmentation Model(DETR) on a custom dataset. We decided to go ahead with Construction Classes and annotated the things of around 50 classes like <a href="https://www.google.com/search?q=grader">grader</a>, <a href="https://www.google.com/search?q=grader">wheel loader</a>, <a href="https://www.google.com/search?q=aac+blocks">aac blocks</a> etc.<br>
+While annotating we just annoatated the things, and left out stuff, as it would be way more tedious to annotate the stuffs like ground, grass, building etc.</p>
+<p>We know existing Models are very well trained on COCO dataset, and we could levrage them to predict stuff classes in our images. So we went out and decided to use pre-trained DETR for Panoptic Segmentation to perform inference on our images and get this stuffs for our images.</p>
+<p>In total we had <strong>10k Images</strong> for all the classes combined, with very high imbalance, like 15 images for one class and on the other extreme 500+ images for other..</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Our-Classes-for-Things-and-Stuff">
+<a class="anchor" href="#Our-Classes-for-Things-and-Stuff" aria-hidden="true"><span class="octicon octicon-link"></span></a>Our Classes for Things and Stuff<a class="anchor-link" href="#Our-Classes-for-Things-and-Stuff"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Things">
+<a class="anchor" href="#Things" aria-hidden="true"><span class="octicon octicon-link"></span></a>Things<a class="anchor-link" href="#Things"> </a>
+</h3>
+<p>We have 48 Things categories.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s1">'aac_blocks'</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s1">'adhesives'</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s1">'ahus'</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s1">'aluminium_frames_for_false_ceiling'</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span>
+    <span class="s1">'chiller'</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s1">'concrete_mixer_machine'</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s1">'concrete_pump_(50%)'</span><span class="p">:</span> <span class="mi">6</span><span class="p">,</span> <span class="s1">'control_panel'</span><span class="p">:</span> <span class="mi">7</span><span class="p">,</span>
+    <span class="s1">'cu_piping'</span><span class="p">:</span> <span class="mi">8</span><span class="p">,</span> <span class="s1">'distribution_transformer'</span><span class="p">:</span> <span class="mi">9</span><span class="p">,</span> <span class="s1">'dump_truck___tipper_truck'</span><span class="p">:</span> <span class="mi">10</span><span class="p">,</span>
+    <span class="s1">'emulsion_paint'</span><span class="p">:</span> <span class="mi">11</span><span class="p">,</span> <span class="s1">'enamel_paint'</span><span class="p">:</span> <span class="mi">12</span><span class="p">,</span> <span class="s1">'fine_aggregate'</span><span class="p">:</span> <span class="mi">13</span><span class="p">,</span> <span class="s1">'fire_buckets'</span><span class="p">:</span> <span class="mi">14</span><span class="p">,</span>
+    <span class="s1">'fire_extinguishers'</span><span class="p">:</span> <span class="mi">15</span><span class="p">,</span> <span class="s1">'glass_wool'</span><span class="p">:</span> <span class="mi">16</span><span class="p">,</span> <span class="s1">'grader'</span><span class="p">:</span> <span class="mi">17</span><span class="p">,</span> <span class="s1">'hoist'</span><span class="p">:</span> <span class="mi">18</span><span class="p">,</span>
+    <span class="s1">'hollow_concrete_blocks'</span><span class="p">:</span> <span class="mi">19</span><span class="p">,</span> <span class="s1">'hot_mix_plant'</span><span class="p">:</span> <span class="mi">20</span><span class="p">,</span> <span class="s1">'hydra_crane'</span><span class="p">:</span> <span class="mi">21</span><span class="p">,</span>
+    <span class="s1">'interlocked_switched_socket'</span><span class="p">:</span> <span class="mi">22</span><span class="p">,</span> <span class="s1">'junction_box'</span><span class="p">:</span> <span class="mi">23</span><span class="p">,</span> <span class="s1">'lime'</span><span class="p">:</span> <span class="mi">24</span><span class="p">,</span> <span class="s1">'marble'</span><span class="p">:</span> <span class="mi">25</span><span class="p">,</span>
+    <span class="s1">'metal_primer'</span><span class="p">:</span> <span class="mi">26</span><span class="p">,</span> <span class="s1">'pipe_fittings'</span><span class="p">:</span> <span class="mi">27</span><span class="p">,</span> <span class="s1">'rcc_hume_pipes'</span><span class="p">:</span> <span class="mi">28</span><span class="p">,</span> <span class="s1">'refrigerant_gas'</span><span class="p">:</span> <span class="mi">29</span><span class="p">,</span>
+    <span class="s1">'river_sand'</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span> <span class="s1">'rmc_batching_plant'</span><span class="p">:</span> <span class="mi">31</span><span class="p">,</span> <span class="s1">'rmu_units'</span><span class="p">:</span> <span class="mi">32</span><span class="p">,</span> <span class="s1">'sanitary_fixtures'</span><span class="p">:</span> <span class="mi">33</span><span class="p">,</span>
+    <span class="s1">'skid_steer_loader_(bobcat)'</span><span class="p">:</span> <span class="mi">34</span><span class="p">,</span> <span class="s1">'smoke_detectors'</span><span class="p">:</span> <span class="mi">35</span><span class="p">,</span> <span class="s1">'split_units'</span><span class="p">:</span> <span class="mi">36</span><span class="p">,</span>
+    <span class="s1">'structural_steel_-_channel'</span><span class="p">:</span> <span class="mi">37</span><span class="p">,</span> <span class="s1">'switch_boards_and_switches'</span><span class="p">:</span> <span class="mi">38</span><span class="p">,</span> <span class="s1">'texture_paint'</span><span class="p">:</span> <span class="mi">39</span><span class="p">,</span>
+    <span class="s1">'threaded_rod'</span><span class="p">:</span> <span class="mi">40</span><span class="p">,</span> <span class="s1">'transit_mixer'</span><span class="p">:</span> <span class="mi">41</span><span class="p">,</span> <span class="s1">'vcb_panel'</span><span class="p">:</span> <span class="mi">42</span><span class="p">,</span> <span class="s1">'vitrified_tiles'</span><span class="p">:</span> <span class="mi">43</span><span class="p">,</span>
+    <span class="s1">'vrf_units'</span><span class="p">:</span> <span class="mi">44</span><span class="p">,</span> <span class="s1">'water_tank'</span><span class="p">:</span> <span class="mi">45</span><span class="p">,</span> <span class="s1">'wheel_loader'</span><span class="p">:</span> <span class="mi">46</span><span class="p">,</span> <span class="s1">'wood_primer'</span><span class="p">:</span> <span class="mi">47</span>
+<span class="p">}</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Stuff">
+<a class="anchor" href="#Stuff" aria-hidden="true"><span class="octicon octicon-link"></span></a>Stuff<a class="anchor-link" href="#Stuff"> </a>
+</h3>
+<p>To make life simpler, I decided to make the stuff categories smaller, by collapsing all the categories to their super categories, and finally leavins us with 16 stuff classes</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<div class="highlight"><pre><span></span><span class="p">{</span>
+    <span class="s1">'building'</span><span class="p">:</span><span class="mi">48</span><span class="p">,</span> <span class="s1">'ceiling'</span><span class="p">:</span><span class="mi">49</span><span class="p">,</span> <span class="s1">'floor'</span><span class="p">:</span><span class="mi">50</span><span class="p">,</span> <span class="s1">'food'</span><span class="p">:</span><span class="mi">51</span><span class="p">,</span> <span class="s1">'furniture'</span><span class="p">:</span><span class="mi">52</span><span class="p">,</span>
+    <span class="s1">'ground'</span><span class="p">:</span><span class="mi">53</span><span class="p">,</span> <span class="s1">'plant'</span><span class="p">:</span><span class="mi">54</span><span class="p">,</span> <span class="s1">'raw_material'</span><span class="p">:</span><span class="mi">55</span><span class="p">,</span> <span class="s1">'sky'</span><span class="p">:</span><span class="mi">56</span><span class="p">,</span> <span class="s1">'solids'</span><span class="p">:</span><span class="mi">57</span><span class="p">,</span>
+    <span class="s1">'structural'</span><span class="p">:</span><span class="mi">58</span><span class="p">,</span> <span class="s1">'textile'</span><span class="p">:</span><span class="mi">59</span><span class="p">,</span> <span class="s1">'wall'</span><span class="p">:</span><span class="mi">60</span><span class="p">,</span> <span class="s1">'water'</span><span class="p">:</span><span class="mi">61</span><span class="p">,</span> <span class="s1">'window'</span><span class="p">:</span><span class="mi">62</span><span class="p">,</span>
+    <span class="s1">'thing'</span><span class="p">:</span><span class="mi">63</span>
+<span class="p">}</span>
+</pre></div>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Mapping for each stuff category of COCO to their super category:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<details>
+  <summary>Categories to Super Categories</summary>
+
+  ```
+      {
+        'cardboard': 'raw_material', 'paper': 'raw_material', 'plastic': 'raw_material',  
+        'metal': 'raw_material', 
+
+        'wall-tile': 'wall', 'wall-panel': 'wall',
+        'wall-wood': 'wall', 'wall-brick': 'wall', 'wall-stone': 'wall',
+        'wall-concrete': 'wall', 'wall-other': 'wall', 
+
+        'ceiling-tile': 'ceiling', 'ceiling-other': 'ceiling', 
+
+        'carpet': 'floor', 'floor-tile': 'floor', 'floor-wood': 'floor',
+        'floor-marble': 'floor', 'floor-stone': 'floor', 'floor-other': 'floor', 
+
+        'window-blind': 'window', 'window-other': 'window',
+
+        'door-stuff': 'furniture', 'desk-stuff': 'furniture', 'table': 'furniture',
+        'shelf': 'furniture', 'cabinet': 'furniture', 'cupboard': 'furniture',
+        'mirror-stuff': 'furniture', 'counter': 'furniture', 'light': 'furniture',
+        'stairs': 'furniture', 'furniture-other': 'furniture', 
+
+        'rug': 'textile', 'mat': 'textile', 'towel': 'textile', 'napkin': 'textile',
+        'clothes': 'textile', 'cloth': 'textile', 'curtain': 'textile',
+        'blanket': 'textile', 'pillow': 'textile', 'banner': 'textile','textile-other': 'textile', 
+
+        'fruit': 'food', 'salad': 'food', 'vegetable': 'food', 'food-other': 'food', 
+
+        'house': 'building', 'skyscraper': 'building','bridge': 'building', 
+        'tent': 'building', 'roof': 'building', 'building-other': 'building',
+
+        'fence': 'structural', 'cage': 'structural', 'net': 'structural', 'railing': 'structural', 
+        'structural-other': 'structural',
+
+        'grass': 'plant', 'tree': 'plant', 'bush': 'plant', 'leaves': 'plant',
+        'flower': 'plant', 'branch': 'plant', 'moss': 'plant', 'straw': 'plant',
+        'plant-other': 'plant',
+
+        'clouds': 'sky', 'sky-other': 'sky',
+
+        'wood': 'solids', 'rock': 'solids', 'stone': 'solids', 
+        'mountain': 'solids', 'hill': 'solids', 'solid-other': 'solids',
+
+        'sand': 'ground', 'snow': 'ground', 'dirt': 'ground', 'mud': 'ground',
+        'gravel': 'ground', 'road': 'ground', 'pavement': 'ground','railroad': 'ground',
+        'platform': 'ground', 'playingfield': 'ground', 'ground-other': 'ground',
+
+        'fog': 'water', 'river': 'water', 'sea': 'water', 'waterdrops': 'water',
+        'water-other': 'water',
+
+        'things': 'things', 'water': 'water', 'window': 'window', 'ceiling': 'ceiling',
+        'sky': 'sky', 'floor': 'floor', 'food': 'food', 'building': 'building','wall': 'wall'
+      }
+  ```
+
+</details>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Annotations">
+<a class="anchor" href="#Annotations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Annotations<a class="anchor-link" href="#Annotations"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Actual-Image">
+<a class="anchor" href="#Actual-Image" aria-hidden="true"><span class="octicon octicon-link"></span></a>Actual Image<a class="anchor-link" href="#Actual-Image"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">I</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="o">&lt;</span><span class="n">image_dir</span><span class="o">&gt;/</span><span class="s1">'images'</span><span class="o">/</span><span class="n">img</span><span class="p">[</span><span class="s1">'file_name'</span><span class="p">])</span> <span class="c1"># Sample Image</span>
+<span class="n">I</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">'RGB'</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/blog/images/copied_from_nb/../images/CustomDataset/Actual.png" alt="ActualImage"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Our-Class-Annotation-(Segmentation-and-BBox)">
+<a class="anchor" href="#Our-Class-Annotation-(Segmentation-and-BBox)" aria-hidden="true"><span class="octicon octicon-link"></span></a>Our Class Annotation (Segmentation and BBox)<a class="anchor-link" href="#Our-Class-Annotation-(Segmentation-and-BBox)"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># get all images containing given categories, select one at random</span>
+<span class="n">catIds</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">getCatIds</span><span class="p">(</span><span class="n">catNms</span><span class="o">=</span><span class="p">[</span><span class="s1">'grader'</span><span class="p">]);</span> <span class="c1"># Sample Category</span>
+<span class="n">imgIds</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">getImgIds</span><span class="p">(</span><span class="n">catIds</span><span class="o">=</span><span class="n">catIds</span> <span class="p">);</span> <span class="c1"># Get Image Ids of all images containing the given category</span>
+<span class="n">img</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">loadImgs</span><span class="p">(</span><span class="n">imgIds</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">imgIds</span><span class="p">))])[</span><span class="mi">0</span><span class="p">]</span> <span class="c1">#Random Image</span>
+
+<span class="n">annIds</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">getAnnIds</span><span class="p">(</span><span class="n">imgIds</span><span class="o">=</span><span class="n">img</span><span class="p">[</span><span class="s1">'id'</span><span class="p">],</span> <span class="n">catIds</span><span class="o">=</span><span class="n">catIds</span><span class="p">,</span> <span class="n">iscrowd</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="c1"># Get annotation ids of all annotations for the img</span>
+<span class="n">anns</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">loadAnns</span><span class="p">(</span><span class="n">annIds</span><span class="p">)</span>
+<span class="n">coco</span><span class="o">.</span><span class="n">showAnns</span><span class="p">(</span><span class="n">anns</span><span class="p">,</span> <span class="n">draw_bbox</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/blog/images/copied_from_nb/../images/CustomDataset/ActualAnnotation.png" alt="ActualAnnotation"></p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">matplotlib.patches</span> <span class="kn">import</span> <span class="n">Polygon</span>
+<span class="n">og_poly</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">ann</span> <span class="ow">in</span> <span class="n">anns</span><span class="p">:</span> <span class="c1"># For each annotation</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">ann</span><span class="p">[</span><span class="s1">'segmentation'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">.</span><span class="n">reshape</span><span class="p">((</span><span class="nb">int</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ann</span><span class="p">[</span><span class="s1">'segmentation'</span><span class="p">][</span><span class="mi">0</span><span class="p">])</span><span class="o">/</span><span class="mi">2</span><span class="p">),</span> <span class="mi">2</span><span class="p">))</span> <span class="c1"># Create Array from segmentation</span>
+    <span class="n">poly</span> <span class="o">=</span> <span class="n">Polygon</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span> <span class="c1"># Convert to matplotlib Polygon</span>
+    <span class="n">og_poly</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">poly</span><span class="p">)</span>
+
+<span class="n">class_mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">og_w</span><span class="p">,</span><span class="n">og_h</span><span class="p">))</span>
+<span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">og_poly</span><span class="p">:</span>
+    <span class="n">cv2</span><span class="o">.</span><span class="n">fillPoly</span><span class="p">(</span><span class="n">class_mask</span><span class="p">,</span> <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">([</span><span class="n">op</span><span class="o">.</span><span class="n">get_xy</span><span class="p">()]),</span> <span class="n">color</span> <span class="o">=</span><span class="p">(</span><span class="mi">255</span><span class="p">))</span> <span class="c1"># Paste our Annotations</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">class_mask</span><span class="p">)</span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/blog/images/copied_from_nb/../images/CustomDataset/AnnotationMask.png" alt="AnnotationMask"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Model-Inference">
+<a class="anchor" href="#Model-Inference" aria-hidden="true"><span class="octicon octicon-link"></span></a>Model Inference<a class="anchor-link" href="#Model-Inference"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>git clone -q https://github.com/facebookresearch/detr.git #Facebook DETR
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">(),</span> <span class="s2">"detr/"</span><span class="p">))</span>
+<span class="c1"># Load DETR trained on COCO for Panoptic Segmentation with ResNet101.</span>
+<span class="n">model</span><span class="p">,</span> <span class="n">postprocessor</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">hub</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">'detr'</span><span class="p">,</span> <span class="s1">'detr_resnet101_panoptic'</span><span class="p">,</span> <span class="n">source</span><span class="o">=</span><span class="s1">'local'</span><span class="p">,</span> <span class="n">pretrained</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">return_postprocessor</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">num_classes</span><span class="o">=</span><span class="mi">250</span><span class="p">)</span>
+<span class="n">model</span><span class="o">.</span><span class="n">eval</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s1">'Loaded!'</span><span class="p">)</span>
+
+<span class="n">img</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1">#Resize to 800 Width and Normalize</span>
+<span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">img</span><span class="p">)</span> <span class="c1"># Model Output</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Attention-Maps">
+<a class="anchor" href="#Attention-Maps" aria-hidden="true"><span class="octicon octicon-link"></span></a>Attention Maps<a class="anchor-link" href="#Attention-Maps"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># compute the scores, excluding the "no-object" class (the last one)</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">out</span><span class="p">[</span><span class="s2">"pred_logits"</span><span class="p">]</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># threshold the confidence</span>
+<span class="n">keep</span> <span class="o">=</span> <span class="n">scores</span> <span class="o">&gt;</span> <span class="mf">0.85</span>
+
+<span class="c1"># Plot all the remaining masks</span>
+<span class="n">ncols</span> <span class="o">=</span> <span class="mi">2</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">ncols</span><span class="o">=</span><span class="n">ncols</span><span class="p">,</span> <span class="n">nrows</span><span class="o">=</span><span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">keep</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span> <span class="o">/</span> <span class="n">ncols</span><span class="p">),</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">18</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="n">mask_log_list</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">attn_map</span><span class="p">,</span><span class="n">logit</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s2">"pred_masks"</span><span class="p">][</span><span class="n">keep</span><span class="p">],</span> <span class="n">out</span><span class="p">[</span><span class="s2">"pred_logits"</span><span class="p">][</span><span class="n">keep</span><span class="p">])):</span>
+    <span class="n">logit</span> <span class="o">=</span> <span class="n">logit</span><span class="o">.</span><span class="n">softmax</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">argmax</span><span class="p">()</span><span class="o">.</span><span class="n">item</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">logit</span> <span class="o">&gt;</span> <span class="mi">92</span><span class="p">:</span> <span class="c1"># If stuff of COCO</span>
+        <span class="n">det_id</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">stuff_dataset_id_to_contiguous_id</span><span class="p">[</span><span class="n">logit</span><span class="p">]</span>
+        <span class="n">logit</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">stuff_classes</span><span class="p">[</span><span class="n">det_id</span><span class="p">]</span>
+    <span class="n">mask_log_list</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">attn_map</span><span class="p">,</span><span class="n">logit</span><span class="p">))</span>
+    <span class="n">axs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">attn_map</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">"cividis"</span><span class="p">)</span>
+    <span class="n">axs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s1">'off'</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/blog/images/copied_from_nb/../images/CustomDataset/AttentionMaps_civ.png" alt="AttentionMaps_civ"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>As we can see, the model nicely predicts masks for each class. The predictions of the models are <code>car</code>, <code>truck</code>, <code>sand</code>, <code>sky</code>, <code>person</code> and <code>tree</code>.<br>
+The class maps are pretty darn good.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="DETR-Post-Processed-Mask">
+<a class="anchor" href="#DETR-Post-Processed-Mask" aria-hidden="true"><span class="octicon octicon-link"></span></a>DETR Post-Processed Mask<a class="anchor-link" href="#DETR-Post-Processed-Mask"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># the post-processor expects as input the target size of the predictions (which we set here to the image size)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">postprocessor</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">torch</span><span class="o">.</span><span class="n">as_tensor</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">:])</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># We extract the segments info and the panoptic result from DETR's prediction</span>
+<span class="n">segments_info</span> <span class="o">=</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s2">"segments_info"</span><span class="p">])</span>
+
+<span class="c1"># Panoptic predictions are stored in a special format png</span>
+<span class="n">panoptic_seg</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">io</span><span class="o">.</span><span class="n">BytesIO</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="s1">'png_string'</span><span class="p">]))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">panoptic_seg</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+<span class="n">final_w</span><span class="p">,</span> <span class="n">final_h</span> <span class="o">=</span> <span class="n">panoptic_seg</span><span class="o">.</span><span class="n">size</span>
+
+<span class="c1"># We convert the png into an segment id map</span>
+<span class="n">panoptic_seg</span> <span class="o">=</span> <span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">panoptic_seg</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span>
+<span class="n">panoptic_seg</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">from_numpy</span><span class="p">(</span><span class="n">rgb2id</span><span class="p">(</span><span class="n">panoptic_seg</span><span class="p">))</span>
+
+<span class="c1"># Detectron2 uses a different numbering of coco classes, here we convert the class ids accordingly</span>
+<span class="n">meta</span> <span class="o">=</span> <span class="n">MetadataCatalog</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"coco_2017_val_panoptic_separated"</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">segments_info</span><span class="p">)):</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">segments_info</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">"category_id"</span><span class="p">]</span>
+    <span class="n">segments_info</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">"category_id"</span><span class="p">]</span> <span class="o">=</span> <span class="n">meta</span><span class="o">.</span><span class="n">thing_dataset_id_to_contiguous_id</span><span class="p">[</span><span class="n">c</span><span class="p">]</span> <span class="k">if</span> <span class="n">segments_info</span><span class="p">[</span><span class="n">i</span><span class="p">][</span><span class="s2">"isthing"</span><span class="p">]</span> <span class="k">else</span> <span class="n">meta</span><span class="o">.</span><span class="n">stuff_dataset_id_to_contiguous_id</span><span class="p">[</span><span class="n">c</span><span class="p">]</span>
+
+
+<span class="c1"># Finally we visualize the prediction</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">Visualizer</span><span class="p">(</span><span class="n">numpy</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">I</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span><span class="o">.</span><span class="n">resize</span><span class="p">((</span><span class="n">final_w</span><span class="p">,</span> <span class="n">final_h</span><span class="p">)))[:,</span> <span class="p">:,</span> <span class="p">::</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">meta</span><span class="p">,</span> <span class="n">scale</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">v</span><span class="o">.</span><span class="n">_default_font_size</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">v</span> <span class="o">=</span> <span class="n">v</span><span class="o">.</span><span class="n">draw_panoptic_seg_predictions</span><span class="p">(</span><span class="n">panoptic_seg</span><span class="p">,</span> <span class="n">segments_info</span><span class="p">,</span> <span class="n">area_threshold</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">cv2_imshow</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">get_image</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/blog/images/copied_from_nb/../images/CustomDataset/Predicted.png" alt="Predicted"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p></p>
+<div class="flash flash-error">
+    <svg class="octicon octicon-alert octicon octicon-alert" viewbox="0 0 16 16" version="1.1" width="16" height="16" aria-hidden="true"><path fill-rule="evenodd" d="M8.22 1.754a.25.25 0 00-.44 0L1.698 13.132a.25.25 0 00.22.368h12.164a.25.25 0 00.22-.368L8.22 1.754zm-1.763-.707c.659-1.234 2.427-1.234 3.086 0l6.082 11.378A1.75 1.75 0 0114.082 15H1.918a1.75 1.75 0 01-1.543-2.575L6.457 1.047zM9 11a1 1 0 11-2 0 1 1 0 012 0zm-.25-5.25a.75.75 0 00-1.5 0v2.5a.75.75 0 001.5 0v-2.5z"></path></svg>
+    <strong>Warning: </strong>Woahhhhhhhh, this is Bad!
+</div>
+The <code>car</code>, <code>tree</code>, <code>sand</code>, <code>sky</code> and <code>person</code> came out nicely. But the <code>truck</code> is pretty bad as the back area has got leaked into the right region.<br>
+If we look at the above attention maps now, we see that the region between <code>tree</code> and <code>sand</code> is not identified, the DETR post-processor spreads the masks of nearby class to regions where there are no predictions above the given threshold.
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Even after pasting our <code>grader</code> annotation, there will be the <code>truck</code> annotation marked pixels in the image and the <code>sand</code> which is leaked.</p>
+<p><img src="/blog/images/copied_from_nb/../images/CustomDataset/Predicted_OnlyMask_AnnotationOnTop.png" alt="Predicted_OnlyMask_AnnotationOnTop"></p>
+<p>And also the border of our annotations may still have the class as <code>truck</code>, so this masks will cause a problem, when we train our DETR.<br>
+DETR identifies objects using the edges, as shown in their example. The <code>truck</code> masks may case an issue, where our model may predict our <code>grader</code> as both <code>grader</code> and also <code>truck</code>.
+<img src="/blog/images/copied_from_nb/../images/CustomDataset/DETRExample.png" alt="DETRExample"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Attention-Mask-ArgMax-Maps">
+<a class="anchor" href="#Attention-Mask-ArgMax-Maps" aria-hidden="true"><span class="octicon octicon-link"></span></a>Attention Mask ArgMax Maps<a class="anchor-link" href="#Attention-Mask-ArgMax-Maps"> </a>
+</h2>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Taking only Stuff into Consideration</span>
+<span class="c1"># Things of COCO is Void(id=0) for us</span>
+<span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">palette</span> <span class="o">=</span> <span class="n">itertools</span><span class="o">.</span><span class="n">cycle</span><span class="p">(</span><span class="n">sns</span><span class="o">.</span><span class="n">color_palette</span><span class="p">())</span>
+<span class="n">color_list</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="n">combined_attn</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">out</span><span class="p">[</span><span class="s1">'pred_masks'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:]</span> <span class="o">+</span> <span class="p">(</span><span class="mi">3</span><span class="p">,))</span>
+<span class="k">for</span> <span class="n">attn_map</span><span class="p">,</span> <span class="n">logit</span><span class="p">,</span> <span class="n">class_id</span> <span class="ow">in</span> <span class="n">mask_log_list</span><span class="p">:</span>
+    <span class="n">color</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="nb">next</span><span class="p">(</span><span class="n">palette</span><span class="p">))</span> <span class="o">*</span> <span class="mi">255</span><span class="p">)</span>
+    <span class="n">color_list</span><span class="p">[</span><span class="n">class_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+    <span class="n">combined_attn</span><span class="p">[</span><span class="n">attn_map</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">color</span>
+    <span class="n">combined_attn</span> <span class="o">=</span> <span class="n">combined_attn</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">combined_attn</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Instead, we can directly ArgMax on the attention maps of the stuff classes, ignoring the things classes of COCO, since we wouldn't want the same issue as mentioned above, and also avoiding the leakage of class by not using the inbuilt DETR post-processor.</p>
+<p>Here the regions which are not predicted, will be marked with black pixels, which in <a href="https://cocodataset.org/#home">COCO Dataset</a> is <code>void</code> class</p>
+<p><img src="/blog/images/copied_from_nb/../images/CustomDataset/CombinedAttentionMask_AnnotationOnTop.png" alt="CombinedAttentionMask_AnnotationOnTop"></p>
+<p>The mask with the BBox(class_id,area).</p>
+<p><img src="/blog/images/copied_from_nb/../images/CustomDataset/Predicted_MaskBBox_AnnotationOnTop.png" alt="Predicted_MaskBBox_AnnotationOnTop"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Final-JSON-for-All-Classes">
+<a class="anchor" href="#Final-JSON-for-All-Classes" aria-hidden="true"><span class="octicon octicon-link"></span></a>Final JSON for All Classes<a class="anchor-link" href="#Final-JSON-for-All-Classes"> </a>
+</h1>
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Create Annotations of Each Class</span>
+
+<span class="k">def</span> <span class="nf">run_class</span><span class="p">(</span><span class="n">class_images_anns</span><span class="p">,</span> <span class="n">class_name</span><span class="p">):</span>
+    <span class="n">class_annotaion</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">class_image</span> <span class="o">=</span> <span class="p">[]</span>
+
+
+    <span class="n">class_color</span> <span class="o">=</span> <span class="n">CATEGORY_COLOR</span><span class="p">[</span><span class="n">class_name</span><span class="p">]</span> <span class="c1"># Get Color Tuple for the class</span>
+    <span class="k">for</span> <span class="n">img</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="n">class_images_anns</span><span class="p">):</span> <span class="c1"># For each annotation in the JSON</span>
+
+        <span class="c1"># The Image annotations has .jpg whereas actual Image is png and vice-versa.</span>
+        <span class="c1"># try and except to get correct image accordingly</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">I</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dataDir</span><span class="o">/</span><span class="n">class_name</span><span class="o">/</span><span class="s1">'images'</span><span class="o">/</span><span class="n">img</span><span class="p">[</span><span class="s1">'file_name'</span><span class="p">])</span>
+        <span class="k">except</span> <span class="ne">FileNotFoundError</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">img</span><span class="p">[</span><span class="s1">'file_name'</span><span class="p">]</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">'.jpg'</span><span class="p">):</span>
+                <span class="n">I</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dataDir</span><span class="o">/</span><span class="n">class_name</span><span class="o">/</span><span class="s1">'images'</span><span class="o">/</span><span class="n">img</span><span class="p">[</span><span class="s1">'file_name'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'jpg'</span><span class="p">,</span><span class="s1">'png'</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="n">img</span><span class="p">[</span><span class="s1">'file_name'</span><span class="p">]</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">'.png'</span><span class="p">):</span>
+                <span class="n">I</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">open</span><span class="p">(</span><span class="n">dataDir</span><span class="o">/</span><span class="n">class_name</span><span class="o">/</span><span class="s1">'images'</span><span class="o">/</span><span class="n">img</span><span class="p">[</span><span class="s1">'file_name'</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">'png'</span><span class="p">,</span><span class="s1">'jpg'</span><span class="p">))</span>
+
+        <span class="c1"># Convert any grayscale or RBGA to RGB</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">convert</span><span class="p">(</span><span class="s1">'RGB'</span><span class="p">)</span>
+        <span class="n">og_h</span><span class="p">,</span> <span class="n">og_w</span> <span class="o">=</span> <span class="n">I</span><span class="o">.</span><span class="n">size</span>
+
+        <span class="c1"># Get Annotation of the Image</span>
+        <span class="n">annIds</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">getAnnIds</span><span class="p">(</span><span class="n">imgIds</span><span class="o">=</span><span class="n">img</span><span class="p">[</span><span class="s1">'id'</span><span class="p">],</span> <span class="n">catIds</span><span class="o">=</span><span class="n">catIds</span><span class="p">,</span> <span class="n">iscrowd</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="n">anns</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">loadAnns</span><span class="p">(</span><span class="n">annIds</span><span class="p">)</span>
+
+        <span class="c1"># Create Polygon for custom Annotation.</span>
+        <span class="n">og_poly</span> <span class="o">=</span> <span class="n">gen_original_poly</span><span class="p">(</span><span class="n">anns</span><span class="p">)</span>
+
+        <span class="c1"># Get DETR output on our Image w.r.t COCO classes</span>
+        <span class="n">trans_img</span> <span class="o">=</span> <span class="n">transform</span><span class="p">(</span><span class="n">I</span><span class="p">)</span><span class="o">.</span><span class="n">unsqueeze</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="n">trans_img</span><span class="o">.</span><span class="n">to</span><span class="p">(</span><span class="s1">'cuda'</span><span class="p">))</span>
+
+        <span class="c1"># Create Masks by stacking Attention Maps and Pasting our Annotation</span>
+        <span class="c1"># Excluding the functions definition for brevity. Can be found from colab link.</span>
+        <span class="n">class_masks</span> <span class="o">=</span> <span class="n">generate_class_maps</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+        <span class="n">pred_mask</span><span class="p">,</span> <span class="n">color2class</span> <span class="o">=</span> <span class="n">generate_pred_masks</span><span class="p">(</span><span class="n">class_masks</span><span class="p">,</span> <span class="n">out</span><span class="p">[</span><span class="s1">'pred_masks'</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">:])</span>
+
+        <span class="n">pred_mask</span> <span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">resize</span><span class="p">(</span><span class="n">pred_mask</span><span class="p">,</span> <span class="p">(</span><span class="n">og_h</span><span class="p">,</span> <span class="n">og_w</span><span class="p">),</span> <span class="n">interpolation</span><span class="o">=</span> <span class="n">cv2</span><span class="o">.</span><span class="n">INTER_NEAREST</span><span class="p">)</span>
+        <span class="c1">#Pasting Our Class on Mask</span>
+        <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">og_poly</span><span class="p">:</span>
+            <span class="n">cv2</span><span class="o">.</span><span class="n">fillPoly</span><span class="p">(</span><span class="n">pred_mask</span><span class="p">,</span> <span class="n">pts</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">([</span><span class="n">op</span><span class="o">.</span><span class="n">get_xy</span><span class="p">()]),</span> <span class="n">color</span> <span class="o">=</span> <span class="n">class_color</span><span class="p">)</span>
+        
+        <span class="c1">#Convering Mask to ID using panopticapi.utils</span>
+        <span class="n">mask_id</span> <span class="o">=</span> <span class="n">rgb2id</span><span class="p">(</span><span class="n">pred_mask</span><span class="p">)</span>
+        
+        <span class="c1"># Final Segmentation Details</span>
+        <span class="n">segments_info</span> <span class="o">=</span> <span class="n">generate_gt</span><span class="p">(</span><span class="n">mask_id</span><span class="p">,</span> <span class="n">color2class</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span>
+        
+        <span class="c1"># The ID image(1 Channel) converted to 3 Channel Mask to save.</span>
+        <span class="n">img_save</span> <span class="o">=</span> <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">id2rgb</span><span class="p">(</span><span class="n">mask_id</span><span class="p">))</span>
+        <span class="n">mask_file_name</span> <span class="o">=</span> <span class="n">img</span><span class="p">[</span><span class="s1">'file_name'</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">'.'</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="s1">'.png'</span>
+        <span class="n">img_save</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">dataDir</span><span class="o">/</span><span class="n">class_name</span><span class="o">/</span><span class="s1">'annotations'</span><span class="o">/</span><span class="n">mask_file_name</span><span class="p">)</span>
+
+
+        <span class="c1"># Appending the Image Annotation to List</span>
+        <span class="n">class_annotaion</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="p">{</span>
+            <span class="s2">"segments_info"</span><span class="p">:</span> <span class="n">segments_info</span><span class="p">,</span>
+            <span class="s2">"file_name"</span><span class="p">:</span> <span class="n">mask_file_name</span><span class="p">,</span>
+            <span class="s2">"image_id"</span><span class="p">:</span>  <span class="nb">int</span><span class="p">(</span><span class="n">img</span><span class="p">[</span><span class="s1">'id'</span><span class="p">])</span>
+            <span class="p">}</span>
+            <span class="p">)</span>
+        
+    <span class="k">return</span> <span class="n">class_annotaion</span><span class="p">,</span> <span class="n">class_image</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">for</span> <span class="n">class_name</span> <span class="ow">in</span> <span class="n">list_class</span><span class="p">:</span> <span class="c1"># Loop over all the classes names</span>
+
+    <span class="n">annFile</span> <span class="o">=</span> <span class="o">&lt;</span><span class="n">images_dir</span><span class="o">&gt;/</span><span class="n">class_name</span><span class="o">/</span><span class="s1">'coco.json'</span> <span class="c1"># Path to the annotations file of each class</span>
+    <span class="n">coco</span> <span class="o">=</span> <span class="n">COCO</span><span class="p">(</span><span class="n">annFile</span><span class="p">)</span> <span class="c1"># Convert JSON to coco object (pycocotools.COCO)</span>
+    <span class="n">cats</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">loadCats</span><span class="p">(</span><span class="n">coco</span><span class="o">.</span><span class="n">getCatIds</span><span class="p">())</span>
+
+    <span class="c1"># get all images containing given categories, select one at random</span>
+    <span class="n">catIds</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">getCatIds</span><span class="p">(</span><span class="n">catNms</span><span class="o">=</span><span class="p">[</span><span class="n">class_name</span><span class="p">]);</span>
+    <span class="n">imgIds</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">getImgIds</span><span class="p">(</span><span class="n">catIds</span><span class="o">=</span><span class="n">catIds</span><span class="p">);</span>
+    <span class="n">images</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">loadImgs</span><span class="p">(</span><span class="n">imgIds</span><span class="p">)</span>
+
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">os</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="o">&lt;</span><span class="n">images_dir</span><span class="o">&gt;/</span><span class="n">class_name</span><span class="o">/</span><span class="s1">'annotations'</span><span class="p">)</span> <span class="c1"># Create Annotations Folder for each Class</span>
+    <span class="k">except</span> <span class="ne">FileExistsError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'WARNING!'</span><span class="p">,</span> <span class="n">e</span><span class="p">)</span>
+
+    <span class="n">CLASS_ANNOTATION</span> <span class="o">=</span> <span class="n">run_class</span><span class="p">(</span><span class="n">images</span><span class="p">,</span> <span class="n">class_name</span><span class="p">)</span> <span class="c1"># Generate Annotations for each class</span>
+    
+    <span class="n">FINAL_JSON</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="n">FINAL_JSON</span><span class="p">[</span><span class="s1">'licenses'</span><span class="p">]</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">dataset</span><span class="p">[</span><span class="s1">'licenses'</span><span class="p">]</span>
+    <span class="n">FINAL_JSON</span><span class="p">[</span><span class="s1">'info'</span><span class="p">]</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">dataset</span><span class="p">[</span><span class="s1">'info'</span><span class="p">]</span>
+    <span class="n">FINAL_JSON</span><span class="p">[</span><span class="s1">'categories'</span><span class="p">]</span> <span class="o">=</span> <span class="n">CATEGORIES</span>
+    <span class="n">FINAL_JSON</span><span class="p">[</span><span class="s1">'images'</span><span class="p">]</span> <span class="o">=</span> <span class="n">coco</span><span class="o">.</span><span class="n">dataset</span><span class="p">[</span><span class="s1">'images'</span><span class="p">]</span>
+    <span class="n">FINAL_JSON</span><span class="p">[</span><span class="s1">'annotations'</span><span class="p">]</span> <span class="o">=</span> <span class="n">CLASS_ANNOTATION</span>
+
+    <span class="n">out_file</span> <span class="o">=</span> <span class="nb">open</span><span class="p">(</span><span class="o">&lt;</span><span class="n">images_dir</span><span class="o">&gt;/</span><span class="n">class_name</span><span class="o">/</span><span class="s1">'annotations'</span><span class="o">/</span><span class="sa">f</span><span class="s1">'</span><span class="si">{</span><span class="n">class_name</span><span class="si">}</span><span class="s1">.json'</span><span class="p">,</span> <span class="s2">"w"</span><span class="p">)</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">FINAL_JSON</span><span class="p">,</span> <span class="n">out_file</span><span class="p">,</span> <span class="n">indent</span> <span class="o">=</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="n">out_file</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="COCO-Format">
+<a class="anchor" href="#COCO-Format" aria-hidden="true"><span class="octicon octicon-link"></span></a>COCO Format<a class="anchor-link" href="#COCO-Format"> </a>
+</h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>COCO is a large-scale object detection, segmentation, and captioning dataset. COCO has several features with 80 object(things) classes, and 91 stuff classes for several tasks like captioning, segmentation, detection etc.</p>
+<p>And it is the most widely used data as well as most widely used data format. So converting our annotations to the COCO format, would help us in levraging pre-built tools to create data pipelines to model.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="File-Structure">
+<a class="anchor" href="#File-Structure" aria-hidden="true"><span class="octicon octicon-link"></span></a>File Structure<a class="anchor-link" href="#File-Structure"> </a>
+</h3>
+<pre><code>&lt;dataset_dir&gt;/
+    data/
+        &lt;filename0&gt;.&lt;ext&gt;
+        &lt;filename1&gt;.&lt;ext&gt;
+        ...
+
+    annotations/
+        &lt;filename0&gt;.png
+        &lt;filename1&gt;.png
+        ...
+
+    labels.json</code></pre>
+<p>The <code>data</code> folder has all the images, the images can be in image formats like JPG, JPEG, PNG.<br>
+The <code>annotations</code> folder has the images of the masks, for every image in the <code>data</code> folder, with the same name and <code>.png</code> extension. The stem name of the file should match with the image in the <code>data</code>.<br>
+The <code>labels.json</code> has 5 main keys, <code>info</code>, <code>licenses</code>, <code>categories</code>, <code>images</code> and <code>annotations</code>. This json file holds the data for the ground truth of the images. The format of the JSON can be varying as per the problem like object-detection, segmentation, keypoint-detection or image-captioning.</p>
+
+<pre><code>{
+    "info": info, 
+    "licenses": [license],
+    "categories": [categories]
+    "images": [image], 
+    "annotations": [annotation], 
+}</code></pre>
+<p>The <code>images</code>, <code>info</code> and <code>licenses</code> remains same for all types, where as the <code>annotations</code> and <code>categories</code> format will differ.</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">info</span> <span class="o">=</span> <span class="p">{</span>
+  <span class="s2">"year"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+  <span class="s2">"version"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+  <span class="s2">"description"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+  <span class="s2">"contributor"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+  <span class="s2">"url"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+  <span class="s2">"date_created"</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+        <span class="p">}</span>
+
+<span class="n">image</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"width"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"height"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"file_name"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">"license"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"flickr_url"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">"coco_url"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">"date_captured"</span><span class="p">:</span> <span class="n">datetime</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">license</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"name"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">"url"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Object-Detection">
+<a class="anchor" href="#Object-Detection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Object Detection<a class="anchor-link" href="#Object-Detection"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Each object instance annotation contains a series of fields, including the category id and segmentation mask(optional if only Detection) of the object.<br>
+An enclosing bounding box is provided for each object (box coordinates are measured from the top left image corner and are 0-indexed). Finally, the categories field of the annotation structure stores the mapping of category id to category and supercategory names</p>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">annotation</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">"image_id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"category_id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"segmentation"</span><span class="p">:</span> <span class="n">RLE</span> <span class="ow">or</span> <span class="p">[</span><span class="n">polygon</span><span class="p">],</span>
+    <span class="s2">"area"</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
+    <span class="s2">"bbox"</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">width</span><span class="p">,</span><span class="n">height</span><span class="p">],</span>
+    <span class="s2">"iscrowd"</span><span class="p">:</span> <span class="mi">0</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span>
+  <span class="p">}</span>
+
+<span class="n">categories</span> <span class="o">=</span> <span class="p">[{</span>
+    <span class="s2">"id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="s2">"name"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="s2">"supercategory"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">}]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Panoptic-Segmentation">
+<a class="anchor" href="#Panoptic-Segmentation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Panoptic Segmentation<a class="anchor-link" href="#Panoptic-Segmentation"> </a>
+</h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>For the panoptic task, each annotation struct is a per-image annotation rather than a per-object annotation. Each per-image annotation has two parts: (1) a PNG that stores the class-agnostic image segmentation and (2) a JSON struct that stores the semantic information for each image segment</p>
+<ul>
+<li>To match an annotation with an image, use the image_id field (that is annotation.image_id==image.id).</li>
+<li>For each annotation, per-pixel segment ids are stored as a single PNG as the same name as image.</li>
+<li>Each segment (whether it's a stuff or thing segment) is assigned a unique id.</li>
+<li>Unlabeled pixels (void) are assigned a value of 0. Note that when you load the PNG as an RGB image, you will need to compute the ids via ids=R+G*256+B*256^2.</li>
+<li>In annotation file. The segment_info.id stores the unique id of the segment and is used to retrieve the corresponding mask from the PNG (ids==segment_info.id).</li>
+<li>Finally, each category struct has two additional fields: isthing that distinguishes stuff and thing categories and color that is useful for consistent visualization.</li>
+</ul>
+
+</div>
+</div>
+</div>
+    
+    
+<div class="cell border-box-sizing code_cell rendered">
+<details class="description">
+      <summary class="btn btn-sm" data-open="Hide Code" data-close="Show Code"></summary>
+        <p></p>
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">annotation</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"image_id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"file_name"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">"segments_info"</span><span class="p">:</span> <span class="p">[</span><span class="n">segment_info</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">segment_info</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">"id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"category_id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"area"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"bbox"</span><span class="p">:</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span><span class="n">y</span><span class="p">,</span><span class="n">width</span><span class="p">,</span><span class="n">height</span><span class="p">],</span>
+    <span class="s2">"iscrowd"</span><span class="p">:</span> <span class="mi">0</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">categories</span> <span class="o">=</span> <span class="p">[{</span>
+    <span class="s2">"id"</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+    <span class="s2">"name"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">"supercategory"</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="s2">"isthing"</span><span class="p">:</span> <span class="mi">0</span> <span class="ow">or</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="s2">"color"</span><span class="p">:</span> <span class="p">[</span><span class="n">R</span><span class="p">,</span><span class="n">G</span><span class="p">,</span><span class="n">B</span><span class="p">],</span>
+<span class="p">}]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+    </details>
+</div>
+    
+
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="abdksyed/blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/09/30/CustomDataset.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>A place to explore thoughts.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/abdksyed" title="abdksyed"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/AI4AvgU" title="AI4AvgU"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
