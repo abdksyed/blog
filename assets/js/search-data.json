@@ -2,11 +2,11 @@
   
     
         "post0": {
-            "title": "DE⫶TR -- End-to-End Object Detection with Transformers",
-            "content": ". What is DETR? . Finds let&#39;s know what is Object Detection . Object detection refers to the capability of computer and software systems to locate objects in an image/scene and identify each object. Object detection has been widely used for face detection, vehicle detection, pedestrian counting, web images, security systems and driverless cars. . How DETR approach the problem? . DETR streamlines the detection pipeline, effectively removing the need for many hand-designed components like a non-maximum suppression procedure or anchor generation that explicitly encode our prior knowledge about the task. The main ingredients of the new framework, called DEtection TRansformer or DETR, are a set-based global loss that forces unique predictions via bipartite matching, and a transformer encoder-decoder architecture. . Given a fixed small set of learned object queries, DETR reasons about the relations of the objects and the global image context to directly output the final set of predictions in parallel. The new model is conceptually simple and does not require a specialized library, unlike many other modern detectors. . DETR demonstrates accuracy and run-time performance on par with the well-established and highly-optimized Faster RCNN baseline on the challenging COCO object detection dataset. Moreover, DETR can be easily generalized to produce panoptic segmentation in a unified manner . Another helpful aspect unlike most existing detection methods, DETR doesn’t require any customized layers, and thus can be reproduced easily in any framework that contains standard CNN and transformer classes. . .",
-            "url": "https://abdksyed.github.io/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/10/02/ObjectDetection-DETR.html",
-            "relUrl": "/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/10/02/ObjectDetection-DETR.html",
-            "date": " • Oct 2, 2021"
+            "title": "DE⫶TR -- Extending Object Detection to Panoptic Segmentation",
+            "content": ".",
+            "url": "https://abdksyed.github.io/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/10/03/PanopticSegmentation-DETR.html",
+            "relUrl": "/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/10/03/PanopticSegmentation-DETR.html",
+            "date": " • Oct 3, 2021"
         }
         
     
