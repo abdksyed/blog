@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
+<title>DE⫶TR – End-to-End Object Detection with Transformers | Explore Thoughts</title>
+<meta name="generator" content="Jekyll v4.1.1" />
+<meta property="og:title" content="DE⫶TR – End-to-End Object Detection with Transformers" />
+<meta property="og:locale" content="en_US" />
+<meta name="description" content="An End to End pipeline for Object Detection." />
+<meta property="og:description" content="An End to End pipeline for Object Detection." />
+<link rel="canonical" href="https://abdksyed.github.io/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/10/02/ObjectDetection-DETR.html" />
+<meta property="og:url" content="https://abdksyed.github.io/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/10/02/ObjectDetection-DETR.html" />
+<meta property="og:site_name" content="Explore Thoughts" />
+<meta property="og:image" content="https://abdksyed.github.io/blog/images/CustomDataset/Predicted.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-10-02T00:00:00-05:00" />
+<script type="application/ld+json">
+{"datePublished":"2021-10-02T00:00:00-05:00","url":"https://abdksyed.github.io/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/10/02/ObjectDetection-DETR.html","@type":"BlogPosting","image":"https://abdksyed.github.io/blog/images/CustomDataset/Predicted.png","headline":"DE⫶TR – End-to-End Object Detection with Transformers","dateModified":"2021-10-02T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://abdksyed.github.io/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/10/02/ObjectDetection-DETR.html"},"description":"An End to End pipeline for Object Detection.","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://abdksyed.github.io/blog/feed.xml" title="Explore Thoughts" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
+
+<script>
+function wrap_img(fn) {
+    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
+        var elements = document.querySelectorAll(".post img");
+        Array.prototype.forEach.call(elements, function(el, i) {
+            if (el.getAttribute("title") && (el.className != "emoji")) {
+                const caption = document.createElement('figcaption');
+                var node = document.createTextNode(el.getAttribute("title"));
+                caption.appendChild(node);
+                const wrapper = document.createElement('figure');
+                wrapper.className = 'image';
+                el.parentNode.insertBefore(wrapper, el);
+                el.parentNode.removeChild(el);
+                wrapper.appendChild(el);
+                wrapper.appendChild(caption);
+            }
+        });
+    } else { document.addEventListener('DOMContentLoaded', fn); }
+}
+window.onload = wrap_img;
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function(){
+    // add link icon to anchor tags
+    var elem = document.querySelectorAll(".anchor-link")
+    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
+    });
+</script>
+</head>
+<body><header class="site-header">
+
+  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">Explore Thoughts</a><nav class="site-nav">
+        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
+        <label for="nav-trigger">
+          <span class="menu-icon">
+            <svg viewBox="0 0 18 15" width="18px" height="15px">
+              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
+            </svg>
+          </span>
+        </label>
+
+        <div class="trigger"><a class="page-link" href="/blog/about/">About Me</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
+      </nav></div>
+</header>
+<main class="page-content" aria-label="Content">
+      <div class="wrapper">
+        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+
+  <header class="post-header">
+    <h1 class="post-title p-name" itemprop="name headline">DE⫶TR -- End-to-End Object Detection with Transformers</h1><p class="page-description">An End to End pipeline for Object Detection.</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-10-02T00:00:00-05:00" itemprop="datePublished">
+        Oct 2, 2021
+      </time>
+       • <span class="read-time" title="Estimated read time">
+    
+    
+      5 min read
+    
+</span></p>
+
+    
+      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
+      
+        <a class="category-tags-link" href="/blog/categories/#Custom Dataset">Custom Dataset</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#Object Detection">Object Detection</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#Panoptic Segmentation">Panoptic Segmentation</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#COCO">COCO</a>
+        &nbsp;
+      
+        <a class="category-tags-link" href="/blog/categories/#DETR">DETR</a>
+        
+      
+      </p>
+    
+
+    
+      
+        <div class="pb-5 d-flex flex-wrap flex-justify-end">
+          <div class="px-2">
+
+    <a href="https://github.com/abdksyed/blog/tree/master/_notebooks/2021-10-02-ObjectDetection-DETR.ipynb" role="button" target="_blank">
+<img class="notebook-badge-image" src="/blog/assets/badges/github.svg" alt="View On GitHub">
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://mybinder.org/v2/gh/abdksyed/blog/master?filepath=_notebooks%2F2021-10-02-ObjectDetection-DETR.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/binder.svg" alt="Open In Binder"/>
+    </a>
+</div>
+
+          <div class="px-2">
+    <a href="https://colab.research.google.com/github/abdksyed/blog/blob/master/_notebooks/2021-10-02-ObjectDetection-DETR.ipynb" target="_blank">
+        <img class="notebook-badge-image" src="/blog/assets/badges/colab.svg" alt="Open In Colab"/>
+    </a>
+</div>
+        </div>
+      </header>
+
+  <div class="post-content e-content" itemprop="articleBody">
+    <ul class="section-nav">
+<li class="toc-entry toc-h1"><a href="#What-is-DETR?">What is DETR? </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Finds-let's-know-what-is-Object-Detection">Finds let&#39;s know what is Object Detection </a></li>
+<li class="toc-entry toc-h2"><a href="#How-DETR-approach-the-problem?">How DETR approach the problem? </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#-">  </a></li>
+<li class="toc-entry toc-h1"><a href="#Architecture">Architecture </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Transformer---Attention-is-all-you-need.">Transformer - Attention is all you need. </a></li>
+<li class="toc-entry toc-h2"><a href="#Prediction-through-Feed-Forward-Network">Prediction through Feed Forward Network </a></li>
+</ul>
+</li>
+<li class="toc-entry toc-h1"><a href="#LOSS">LOSS </a>
+<ul>
+<li class="toc-entry toc-h2"><a href="#Set-Prediction-Loss">Set Prediction Loss </a></li>
+</ul>
+</li>
+</ul><!--
+#################################################
+### THIS FILE WAS AUTOGENERATED! DO NOT EDIT! ###
+#################################################
+# file to edit: _notebooks/2021-10-02-ObjectDetection-DETR.ipynb
+-->
+
+<div class="container" id="notebook-container">
+        
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><img src="/blog/images/copied_from_nb/../images/ObjectDetection/Cover.png" alt="Cool"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="What-is-DETR?">
+<a class="anchor" href="#What-is-DETR?" aria-hidden="true"><span class="octicon octicon-link"></span></a>What is DETR?<a class="anchor-link" href="#What-is-DETR?"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Finds-let's-know-what-is-Object-Detection">
+<a class="anchor" href="#Finds-let's-know-what-is-Object-Detection" aria-hidden="true"><span class="octicon octicon-link"></span></a>Finds let's know what is Object Detection<a class="anchor-link" href="#Finds-let's-know-what-is-Object-Detection"> </a>
+</h2>
+<p>Object detection refers to the capability of computer and software systems to locate objects in an image/scene and identify each object.<br>
+Object detection has been widely used for face detection, vehicle detection, pedestrian counting, web images, security systems and driverless cars.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="How-DETR-approach-the-problem?">
+<a class="anchor" href="#How-DETR-approach-the-problem?" aria-hidden="true"><span class="octicon octicon-link"></span></a>How DETR approach the problem?<a class="anchor-link" href="#How-DETR-approach-the-problem?"> </a>
+</h2>
+<p><code>DETR</code> streamlines the detection pipeline, effectively removing the need for many hand-designed components like a <code>non-maximum suppression</code> procedure or <code>anchor generation</code>
+that explicitly encode our prior knowledge about the task. The main ingredients of the new framework, called <code>DEtection TRansformer</code> or <code>DETR</code>, are a <code>set-based global loss</code> that forces unique predictions via <code>bipartite matching</code>, and a <code>transformer encoder-decoder architecture</code>.</p>
+<p>Given a fixed small <code>set of learned object queries</code>, DETR reasons about the relations of the objects and the global image context to directly output
+the final set of predictions in parallel. The new model is conceptually simple and does not require a specialized library, unlike many other modern detectors.</p>
+<p>DETR demonstrates accuracy and run-time performance on par with the well-established and highly-optimized Faster RCNN baseline on the challenging COCO object detection dataset. Moreover, DETR can be easily generalized to produce panoptic segmentation in a unified manner</p>
+<p>Another helpful aspect unlike most existing detection methods, DETR doesn’t require any customized layers, and thus can be reproduced easily in any framework that contains standard CNN and transformer classes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="-">
+<a class="anchor" href="#-" aria-hidden="true"><span class="octicon octicon-link"></span></a> <a class="anchor-link" href="#-"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Architecture">
+<a class="anchor" href="#Architecture" aria-hidden="true"><span class="octicon octicon-link"></span></a>Architecture<a class="anchor-link" href="#Architecture"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Transformer---Attention-is-all-you-need.">
+<a class="anchor" href="#Transformer---Attention-is-all-you-need." aria-hidden="true"><span class="octicon octicon-link"></span></a>Transformer - Attention is all you need.<a class="anchor-link" href="#Transformer---Attention-is-all-you-need."> </a>
+</h2>
+<p><code>Transformers</code> introduced in 2017, came up with a novel approach of <code>Self-Attention Mechanism</code> where each element scan through every other element of a sequence and update it by aggregating information from the whole sequence.</p>
+<p>The <code>Transformers</code> changed the entire NLP domain, but wasn't used until 2020 in the Computer Vision domain by the introduction of <code>Vision Transformers</code>. (more on it <a href="https://github.com/abdksyed/ViT">here</a>).</p>
+<p><img src="/blog/images/copied_from_nb/../images/ObjectDetection/ViT_model.gif" alt="VIT Model"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>DETR uses the same <code>Self-Attention Mechanism</code> in their <code>Encoded-Decoder</code> architecture.</p>
+<p>In <code>ViT</code> the images are converted to patches and than flattened and passed through the Linear Projection layer. to get <code>image embeddings</code> which are added with <code>positional embeddings</code>. But in DETR, we use a <code>ResNet50</code> trained on <code>ImageNet</code> as a Backbone, and the final feature map from ResNet-5 block is taken the shape of the feature map is <code>d x H/32 x W/32</code> and it is converted to embeddings by <code>flattening it on H and W</code>, and transposing it to become, <code>196x256</code> (HW x 256) as Transformers accept such sequential embeddings.</p>
+<p>DETR uses <code>Encoder-Decoder</code> architecture, Each encoder layer has a standard architecture and consists of a multi-head self-attention module and a feed forward network (FFN). Since the transformer architecture is permutation-invariant, it is supplemented with fixed positional encodings that are added to the input of each attention layer. DETR used 6 encoders.</p>
+<p>TThe decoder follows the standard architecture of the transformer, transforming N embeddings of size d using multi-headed <code>encoder-decoder attention</code> and <code>self-attention mechanisms</code>, with the only difference that DETR model decodes the N objects in parallel at each decoder layer, while original Transformer use an autoregressive model that predicts the output sequence one element at a time.</p>
+<p>Since the decoder is also permutation-invariant, the N input embeddings must be different to produce different results. These input embeddings(to the decoder) are <code>learnt positional encodings</code> that are refer to as <strong><code>object queries</code></strong>, and similarly to the encoder, we add them to the input of each attention layer.<br>
+The N object queries are transformed into an output embedding by the decoder. They are then independently decoded into box coordinates and class labels by a feed forward network, resulting N final predictions. Using self and encoder-decoder attention over these embeddings, the model globally reasons about all objects together using pair-wise relations between them, while being able to use the whole image as context.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Prediction-through-Feed-Forward-Network">
+<a class="anchor" href="#Prediction-through-Feed-Forward-Network" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prediction through Feed Forward Network<a class="anchor-link" href="#Prediction-through-Feed-Forward-Network"> </a>
+</h2>
+<p>The final prediction is computed by a <code>3-layer perceptron</code> with <code>ReLU</code> activation function and hidden dimension d, and a linear projection layer. The FFN predicts the <code>normalized center coordinates, height and width of the box w.r.t. the input image</code>, and the linear layer predicts the <code>class label using a softmax</code> function. Since we predict a
+fixed-size set of N bounding boxes, where <em>N is usually much larger than the actual number of objects</em> of interest in an image, an additional <em>special class label ∅</em> is used to represent that no object is detected within a slot. This class plays a similar role to the “background” class in the standard object detection approaches.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="LOSS">
+<a class="anchor" href="#LOSS" aria-hidden="true"><span class="octicon octicon-link"></span></a>LOSS<a class="anchor-link" href="#LOSS"> </a>
+</h1>
+<blockquote>
+<p>Let's see how DETR is trained</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Set-Prediction-Loss">
+<a class="anchor" href="#Set-Prediction-Loss" aria-hidden="true"><span class="octicon octicon-link"></span></a>Set Prediction Loss<a class="anchor-link" href="#Set-Prediction-Loss"> </a>
+</h2>
+<p>DETR infers a <em>fixed-size set of N predictions</em>, in a single pass through the decoder, where N is set to be significantly larger than the typical number of objects in an image. Since there are large number of predictions, which as said is more than objects present in the image, one of the main difficulties arises in training is to score predicted objects (class, position, size) with respect to the ground truth.<br>
+DETR loss produces an optimal bipartite matching between predicted and ground truth objects, and then optimize object-specific (bounding box) losses, more specifically the <code>Hungarian algorithm</code> which is a “combinatorial optimization algorithm that solves the assignment problem in polynomial time”. <a href="https://en.wikipedia.org/wiki/Hungarian_algorithm">ref</a></p>
+<p>One of the main benefits of this approach is that it simply produces a set of predictions rather than a list, meaning that the produced boxes are unique (which saves a lot of post-processing time). It also allows them to do box predictions directly rather than doing those predictions with respect to some initial guesses.</p>
+<p>The matching is to account for ordering differences in the permutations of the predictions compared to the ground truth. Given a particular loss function ${L}_{match}(\hat{y}, y)$, it finds the permutation for the predictions that gives the minimum total loss. The matching checks the possibilities of all permutations, and selects the one that minimizes the total loss, giving the model a kind benifit of doubt as to set of predictions, which the model learns with training.</p>
+<!-- ![BipartiteMathcing](../images/ObjectDetection/BipartiteMatching.jpg) -->
+
+<p>This matching portion plays the same role as heuristic rules used to match proposal or anchors to past ground truth objects in past object detection models. The solution for the above problem is found using the <code>Hungarain Algorithm</code>. As can be seen from the above image, the name for the loss function comes from the Bipartite Graph that is seen in graph theory.</p>
+
+</div>
+</div>
+</div>
+</div>
+
+
+
+  </div><!-- from https://github.com/utterance/utterances -->
+<script src="https://utteranc.es/client.js"
+        repo="abdksyed/blog"
+        issue-term="title"
+        label="blogpost-comment"
+        theme="github-light"
+        crossorigin="anonymous"
+        async>
+</script><a class="u-url" href="/blog/custom%20dataset/object%20detection/panoptic%20segmentation/coco/detr/2021/10/02/ObjectDetection-DETR.html" hidden></a>
+</article>
+      </div>
+    </main><footer class="site-footer h-card">
+  <data class="u-url" href="/blog/"></data>
+
+  <div class="wrapper">
+
+    <div class="footer-col-wrapper">
+      <div class="footer-col">
+        <p class="feed-subscribe">
+          <a href="/blog/feed.xml">
+            <svg class="svg-icon orange">
+              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
+            </svg><span>Subscribe</span>
+          </a>
+        </p>
+      </div>
+      <div class="footer-col">
+        <p>A place to explore thoughts.</p>
+      </div>
+    </div>
+
+    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/abdksyed" title="abdksyed"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/AI4AvgU" title="AI4AvgU"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
+</div>
+
+  </div>
+
+</footer>
+</body>
+
+</html>
