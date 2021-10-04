@@ -126,14 +126,14 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h3"><a href="#then-we-perform-the-above-steps-explain-these-steps">Then we perform the above steps (EXPLAIN THESE STEPS)</a></li>
 <li class="toc-entry toc-h3"><a href="#result">RESULT</a></li>
 <li class="toc-entry toc-h3"><a href="#acknowledments">Acknowledments:</a></li>
-</ul><p><img src="/blog/images/DETR/0_DETR_Panoptic.png" alt="Panoptic_Flow" title="Panoptic Flow"></p>
+</ul><p><img src="/blog/images/DETR-QA/0_DETR_Panoptic.png" alt="Panoptic_Flow" title="Panoptic Flow"></p>
 
 <h3 id="we-take-the-encoded-image-dxh32xw32-and-send-it-to-multi-head-attention-from-where-do-we-take-this-encoded-image">
 <a class="anchor" href="#we-take-the-encoded-image-dxh32xw32-and-send-it-to-multi-head-attention-from-where-do-we-take-this-encoded-image" aria-hidden="true"><span class="octicon octicon-link"></span></a>We take the encoded image (dxH/32xW/32) and send it to Multi-Head Attention (<strong>FROM WHERE DO WE TAKE THIS ENCODED IMAGE?</strong>)</h3>
 
 <p>The encoded image <em>d x H/32 x W/32</em> is the image which is the output of the <strong><em>transformer encoder</em></strong>. When the final feature map from ResNet-5 block is taken the shape of the feature map is <em>d x H/32 x W/32</em> and it is converted to embeddings by flattening it on H and W, and transposing it to become, 196x256 (HW x 256) as Transformers accept such sequential embeddings. This embeddings after passed through the 6 layer encoder maintains it’s shape, if 196x256, and this final encoded 196x256 is again re-arranged to form the Encoded Image which after completion of object detection is sent to a Multi-head attention layer along with bounding box embeddings.</p>
 
-<p><img src="/blog/images/DETR/7_Encoded_Image.png" alt="Encoder" title="Encoder"></p>
+<p><img src="/blog/images/DETR-QA/7_Encoded_Image.png" alt="Encoder" title="Encoder"></p>
 
 <h5 id="we-than-along-with-dxn-box-embeddings-send-the-encoded-image-to-the-multi-head-attention">
 <a class="anchor" href="#we-than-along-with-dxn-box-embeddings-send-the-encoded-image-to-the-multi-head-attention" aria-hidden="true"><span class="octicon octicon-link"></span></a>We than along with dxN Box embeddings send the encoded Image to the Multi-Head Attention</h5>
@@ -145,7 +145,7 @@ window.onload = wrap_img;
 
 <p>The each box embeddings are dot product with the encoded image, using <em>M</em> attention heads to get the desired <em>N x M x H/32 x W/32</em> attention heatmap, where N are the number of objects detected in the detection pipeline.</p>
 
-<p><img src="/blog/images/DETR/8_Box_Image_attn.png" alt="Box_Image_Attention" title="Box Image Attention"></p>
+<p><img src="/blog/images/DETR-QA/8_Box_Image_attn.png" alt="Box_Image_Attention" title="Box Image Attention"></p>
 
 <h3 id="then-we-concatenate-these-maps-with-res5-block-where-is-this-coming-from">
 <a class="anchor" href="#then-we-concatenate-these-maps-with-res5-block-where-is-this-coming-from" aria-hidden="true"><span class="octicon octicon-link"></span></a>Then we concatenate these maps with Res5 Block (<strong>WHERE IS THIS COMING FROM?</strong>)</h3>
@@ -167,7 +167,7 @@ window.onload = wrap_img;
 
 <p>Hence the Res5/Res4/Res3/Res2 feature maps are coming from the Backbone CNN which was used initially to generate the image embeddings, where each feature map was saved and set aside after every block.</p>
 
-<p><img src="/blog/images/DETR/12_Res_Middle.png" alt="ResNet_FeatureMaps" title="ResNet FeatureMaps"></p>
+<p><img src="/blog/images/DETR-QA/12_Res_Middle.png" alt="ResNet_FeatureMaps" title="ResNet FeatureMaps"></p>
 
 <h3 id="then-we-perform-the-above-steps-explain-these-steps">
 <a class="anchor" href="#then-we-perform-the-above-steps-explain-these-steps" aria-hidden="true"><span class="octicon octicon-link"></span></a>Then we perform the above steps (<strong>EXPLAIN THESE STEPS</strong>)</h3>
@@ -176,14 +176,14 @@ window.onload = wrap_img;
 
 <p>The Convolutions are all 3x3 Kernels, and the Normalization being used is Group Normalization and ReLU activation is performed after every Conv-Norm.</p>
 
-<p><img src="/blog/images/DETR/11_Res_Up.png" alt="Maps_2_Masks" title="Maps to Masks"></p>
+<p><img src="/blog/images/DETR-QA/11_Res_Up.png" alt="Maps_2_Masks" title="Maps to Masks"></p>
 
 <h3 id="result">
 <a class="anchor" href="#result" aria-hidden="true"><span class="octicon octicon-link"></span></a>RESULT</h3>
 
 <p>This than is passed though Pixel-wise Argmax and concatenated to get the final Panoptic Segmentation Mask.</p>
 
-<p><img src="/blog/images/DETR/10_Panoptic.png" alt="Panoptic_Result" title="Panoptic Results"></p>
+<p><img src="/blog/images/DETR-QA/10_Panoptic.png" alt="Panoptic_Result" title="Panoptic Results"></p>
 
 <h3 id="acknowledments">
 <a class="anchor" href="#acknowledments" aria-hidden="true"><span class="octicon octicon-link"></span></a>Acknowledments:</h3>
