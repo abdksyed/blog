@@ -1,1 +1,1 @@
-Sitemap: /sitemap.xml
+Sitemap: https://abdksyed.github.io/blog/sitemap.xml
