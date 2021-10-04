@@ -1,74 +1,4 @@
-<!DOCTYPE html>
-<html lang="en"><head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="twitter:card" content="summary_large_image" /><!-- Begin Jekyll SEO tag v2.6.1 -->
-<title>DETR Q/A | Explore Thoughts</title>
-<meta name="generator" content="Jekyll v4.1.1" />
-<meta property="og:title" content="DETR Q/A" />
-<meta property="og:locale" content="en_US" />
-<meta name="description" content="Pondering few Question on DETR" />
-<meta property="og:description" content="Pondering few Question on DETR" />
-<link rel="canonical" href="https://abdksyed.github.io/blog/detr/panoptic%20segmentation/object%20detection/2021/09/30/DETR-QA.html" />
-<meta property="og:url" content="https://abdksyed.github.io/blog/detr/panoptic%20segmentation/object%20detection/2021/09/30/DETR-QA.html" />
-<meta property="og:site_name" content="Explore Thoughts" />
-<meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-09-30T00:00:00-05:00" />
-<script type="application/ld+json">
-{"datePublished":"2021-09-30T00:00:00-05:00","url":"https://abdksyed.github.io/blog/detr/panoptic%20segmentation/object%20detection/2021/09/30/DETR-QA.html","@type":"BlogPosting","headline":"DETR Q/A","dateModified":"2021-09-30T00:00:00-05:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://abdksyed.github.io/blog/detr/panoptic%20segmentation/object%20detection/2021/09/30/DETR-QA.html"},"description":"Pondering few Question on DETR","@context":"https://schema.org"}</script>
-<!-- End Jekyll SEO tag -->
-<link rel="stylesheet" href="/blog/assets/css/style.css"><link type="application/atom+xml" rel="alternate" href="https://abdksyed.github.io/blog/feed.xml" title="Explore Thoughts" /><link rel="shortcut icon" type="image/x-icon" href="/blog/images/favicon.ico"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Primer/15.2.0/primer.css" integrity="sha512-xTz2ys4coGAOz8vuV1NcQBkgVmKhsSEtjbqyMJbBHRplFuvKIUo6xhLHpAyPt9mfR6twHJgn9OgVLuqOvjeBhg==" crossorigin="anonymous" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.14.0/css/all.min.css" integrity="sha512-1PKOgIY59xJ8Co8+NE6FZ+LOAZKjy+KY8iq0G4B3CyeY6wYHN3yt9PW0XpSriVlkMXe40PTKnXrLnZ9+fkDaog==" crossorigin="anonymous" />
-
-<script>
-function wrap_img(fn) {
-    if (document.attachEvent ? document.readyState === "complete" : document.readyState !== "loading") {
-        var elements = document.querySelectorAll(".post img");
-        Array.prototype.forEach.call(elements, function(el, i) {
-            if (el.getAttribute("title") && (el.className != "emoji")) {
-                const caption = document.createElement('figcaption');
-                var node = document.createTextNode(el.getAttribute("title"));
-                caption.appendChild(node);
-                const wrapper = document.createElement('figure');
-                wrapper.className = 'image';
-                el.parentNode.insertBefore(wrapper, el);
-                el.parentNode.removeChild(el);
-                wrapper.appendChild(el);
-                wrapper.appendChild(caption);
-            }
-        });
-    } else { document.addEventListener('DOMContentLoaded', fn); }
-}
-window.onload = wrap_img;
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function(){
-    // add link icon to anchor tags
-    var elem = document.querySelectorAll(".anchor-link")
-    elem.forEach(e => (e.innerHTML = '<i class="fas fa-link fa-xs"></i>'));
-    });
-</script>
-</head>
-<body><header class="site-header">
-
-  <div class="wrapper"><a class="site-title" rel="author" href="/blog/">Explore Thoughts</a><nav class="site-nav">
-        <input type="checkbox" id="nav-trigger" class="nav-trigger" />
-        <label for="nav-trigger">
-          <span class="menu-icon">
-            <svg viewBox="0 0 18 15" width="18px" height="15px">
-              <path d="M18,1.484c0,0.82-0.665,1.484-1.484,1.484H1.484C0.665,2.969,0,2.304,0,1.484l0,0C0,0.665,0.665,0,1.484,0 h15.032C17.335,0,18,0.665,18,1.484L18,1.484z M18,7.516C18,8.335,17.335,9,16.516,9H1.484C0.665,9,0,8.335,0,7.516l0,0 c0-0.82,0.665-1.484,1.484-1.484h15.032C17.335,6.031,18,6.696,18,7.516L18,7.516z M18,13.516C18,14.335,17.335,15,16.516,15H1.484 C0.665,15,0,14.335,0,13.516l0,0c0-0.82,0.665-1.483,1.484-1.483h15.032C17.335,12.031,18,12.695,18,13.516L18,13.516z"/>
-            </svg>
-          </span>
-        </label>
-
-        <div class="trigger"><a class="page-link" href="/blog/about/">About Me</a><a class="page-link" href="/blog/search/">Search</a><a class="page-link" href="/blog/categories/">Tags</a></div>
-      </nav></div>
-</header>
-<main class="page-content" aria-label="Content">
-      <div class="wrapper">
-        <article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
+<article class="post h-entry" itemscope itemtype="http://schema.org/BlogPosting">
 
   <header class="post-header">
     <h1 class="post-title p-name" itemprop="name headline">DETR Q/A</h1><p class="page-description">Pondering few Question on DETR</p><p class="post-meta post-meta-title"><time class="dt-published" datetime="2021-09-30T00:00:00-05:00" itemprop="datePublished">
@@ -81,19 +11,6 @@ window.onload = wrap_img;
     
 </span></p>
 
-    
-      <p class="category-tags"><i class="fas fa-tags category-tags-icon"></i></i> 
-      
-        <a class="category-tags-link" href="/blog/categories/#DETR">DETR</a>
-        &nbsp;
-      
-        <a class="category-tags-link" href="/blog/categories/#Panoptic Segmentation">Panoptic Segmentation</a>
-        &nbsp;
-      
-        <a class="category-tags-link" href="/blog/categories/#Object Detection">Object Detection</a>
-        
-      
-      </p>
     
 
     </header>
@@ -110,14 +27,14 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h3"><a href="#then-we-perform-the-above-steps-explain-these-steps">Then we perform the above steps (EXPLAIN THESE STEPS)</a></li>
 <li class="toc-entry toc-h3"><a href="#result">RESULT</a></li>
 <li class="toc-entry toc-h3"><a href="#acknowledments">Acknowledments:</a></li>
-</ul><p><img src="/blog/images/DETR/0_DETR_Panoptic.png" alt="Panoptic_Flow" title="Panoptic Flow"></p>
+</ul><p><img src="/images/DETR/0_DETR_Panoptic.png" alt="Panoptic_Flow" title="Panoptic Flow"></p>
 
 <h3 id="we-take-the-encoded-image-dxh32xw32-and-send-it-to-multi-head-attention-from-where-do-we-take-this-encoded-image">
 <a class="anchor" href="#we-take-the-encoded-image-dxh32xw32-and-send-it-to-multi-head-attention-from-where-do-we-take-this-encoded-image" aria-hidden="true"><span class="octicon octicon-link"></span></a>We take the encoded image (dxH/32xW/32) and send it to Multi-Head Attention (<strong>FROM WHERE DO WE TAKE THIS ENCODED IMAGE?</strong>)</h3>
 
 <p>The encoded image <em>d x H/32 x W/32</em> is the image which is the output of the <strong><em>transformer encoder</em></strong>. When the final feature map from ResNet-5 block is taken the shape of the feature map is <em>d x H/32 x W/32</em> and it is converted to embeddings by flattening it on H and W, and transposing it to become, 196x256 (HW x 256) as Transformers accept such sequential embeddings. This embeddings after passed through the 6 layer encoder maintains it’s shape, if 196x256, and this final encoded 196x256 is again re-arranged to form the Encoded Image which after completion of object detection is sent to a Multi-head attention layer along with bounding box embeddings.</p>
 
-<p><img src="/blog/images/DETR/7_Encoded_Image.png" alt="Encoder" title="Encoder"></p>
+<p><img src="/images/DETR/7_Encoded_Image.png" alt="Encoder" title="Encoder"></p>
 
 <h5 id="we-than-along-with-dxn-box-embeddings-send-the-encoded-image-to-the-multi-head-attention">
 <a class="anchor" href="#we-than-along-with-dxn-box-embeddings-send-the-encoded-image-to-the-multi-head-attention" aria-hidden="true"><span class="octicon octicon-link"></span></a>We than along with dxN Box embeddings send the encoded Image to the Multi-Head Attention</h5>
@@ -129,7 +46,7 @@ window.onload = wrap_img;
 
 <p>The each box embeddings are dot product with the encoded image, using <em>M</em> attention heads to get the desired <em>N x M x H/32 x W/32</em> attention heatmap, where N are the number of objects detected in the detection pipeline.</p>
 
-<p><img src="/blog/images/DETR/8_Box_Image_attn.png" alt="Box_Image_Attention" title="Box Image Attention"></p>
+<p><img src="/images/DETR/8_Box_Image_attn.png" alt="Box_Image_Attention" title="Box Image Attention"></p>
 
 <h3 id="then-we-concatenate-these-maps-with-res5-block-where-is-this-coming-from">
 <a class="anchor" href="#then-we-concatenate-these-maps-with-res5-block-where-is-this-coming-from" aria-hidden="true"><span class="octicon octicon-link"></span></a>Then we concatenate these maps with Res5 Block (<strong>WHERE IS THIS COMING FROM?</strong>)</h3>
@@ -151,7 +68,7 @@ window.onload = wrap_img;
 
 <p>Hence the Res5/Res4/Res3/Res2 feature maps are coming from the Backbone CNN which was used initially to generate the image embeddings, where each feature map was saved and set aside after every block.</p>
 
-<p><img src="/blog/images/DETR/12_Res_Middle.png" alt="ResNet_FeatureMaps" title="ResNet FeatureMaps"></p>
+<p><img src="/images/DETR/12_Res_Middle.png" alt="ResNet_FeatureMaps" title="ResNet FeatureMaps"></p>
 
 <h3 id="then-we-perform-the-above-steps-explain-these-steps">
 <a class="anchor" href="#then-we-perform-the-above-steps-explain-these-steps" aria-hidden="true"><span class="octicon octicon-link"></span></a>Then we perform the above steps (<strong>EXPLAIN THESE STEPS</strong>)</h3>
@@ -160,14 +77,14 @@ window.onload = wrap_img;
 
 <p>The Convolutions are all 3x3 Kernels, and the Normalization being used is Group Normalization and ReLU activation is performed after every Conv-Norm.</p>
 
-<p><img src="/blog/images/DETR/11_Res_Up.png" alt="Maps_2_Masks" title="Maps to Masks"></p>
+<p><img src="/images/DETR/11_Res_Up.png" alt="Maps_2_Masks" title="Maps to Masks"></p>
 
 <h3 id="result">
 <a class="anchor" href="#result" aria-hidden="true"><span class="octicon octicon-link"></span></a>RESULT</h3>
 
 <p>This than is passed though Pixel-wise Argmax and concatenated to get the final Panoptic Segmentation Mask.</p>
 
-<p><img src="/blog/images/DETR/10_Panoptic.png" alt="Panoptic_Result" title="Panoptic Results"></p>
+<p><img src="/images/DETR/10_Panoptic.png" alt="Panoptic_Result" title="Panoptic Results"></p>
 
 <h3 id="acknowledments">
 <a class="anchor" href="#acknowledments" aria-hidden="true"><span class="octicon octicon-link"></span></a>Acknowledments:</h3>
@@ -176,35 +93,5 @@ DETR Paper: <a href="https://arxiv.org/abs/2005.12872">arxiv</a><br>
 Excellent Demo from Author: <a href="https://www.youtube.com/watch?v=utxbUlo9CyY">Video</a><br>
 Great Explanation on Paper: <a href="https://www.youtube.com/watch?v=T35ba_VXkMY">Yanic</a>, <a href="https://www.youtube.com/watch?v=BNx-wno-0-g">AI Epiphany</a></p>
 
-  </div><a class="u-url" href="/blog/detr/panoptic%20segmentation/object%20detection/2021/09/30/DETR-QA.html" hidden></a>
+  </div><a class="u-url" href="/detr/panoptic%20segmentation/object%20detection/2021/09/30/DETR-QA.html" hidden></a>
 </article>
-      </div>
-    </main><footer class="site-footer h-card">
-  <data class="u-url" href="/blog/"></data>
-
-  <div class="wrapper">
-
-    <div class="footer-col-wrapper">
-      <div class="footer-col">
-        <p class="feed-subscribe">
-          <a href="/blog/feed.xml">
-            <svg class="svg-icon orange">
-              <use xlink:href="/blog/assets/minima-social-icons.svg#rss"></use>
-            </svg><span>Subscribe</span>
-          </a>
-        </p>
-      </div>
-      <div class="footer-col">
-        <p>A place to explore thoughts.</p>
-      </div>
-    </div>
-
-    <div class="social-links"><ul class="social-media-list"><li><a rel="me" href="https://github.com/abdksyed" title="abdksyed"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#github"></use></svg></a></li><li><a rel="me" href="https://twitter.com/AI4AvgU" title="AI4AvgU"><svg class="svg-icon grey"><use xlink:href="/blog/assets/minima-social-icons.svg#twitter"></use></svg></a></li></ul>
-</div>
-
-  </div>
-
-</footer>
-</body>
-
-</html>
