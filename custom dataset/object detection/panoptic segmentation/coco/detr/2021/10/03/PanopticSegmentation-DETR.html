@@ -94,7 +94,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      5 min read
+      7 min read
     
 </span></p>
 
@@ -155,6 +155,7 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h2"><a href="#Sending-to-Transformer">Sending to Transformer </a></li>
 </ul>
 </li>
+<li class="toc-entry toc-h1"><a href="#Mask-Head">Mask Head </a></li>
 <li class="toc-entry toc-h1"><a href="#Some-Cool-Segmentations">Some Cool Segmentations </a></li>
 </ul><!--
 #################################################
@@ -383,6 +384,34 @@ window.onload = wrap_img;
 <p>After we get the Image embeddings, we can send to a Transformer Encoder, here we have 6 layers of encoders, where output of one encoder is sent as input to other, to increase the model capacity and improve training.</p>
 <p>Since the transformers, work on sequence and maintain the sequence length, the input is a sequence of image patches and the output of all the encoders are also patches which can be again converted to form/shape of an image, so here after the image is encoded throught the encoder, we save the encoded image separately for further usage(which we will see soon in mask head part), and the sequence is sent to the decoder</p>
 <p><img src="/blog/images/copied_from_nb/../images/PanopticSegmentation/7_Encoded_Image.png" alt="Encoder"></p>
+<p>The sequence as discussed is sent to the decoder, but as a <code>key</code> and <code>value</code>, where as the <code>query</code> for the atetntion mechanis, comes from the <code>Object Queries</code>. The object queries here are fixed number of sequence of length N (here DETR used 100), where are initially initialized randomly, and the <code>object queries</code> intuitively works as a set entities asking the image(embeddings from encoder) regions about the presence of objects.</p>
+<p><img src="/blog/images/copied_from_nb/../images/PanopticSegmentation/object_queries.png" alt="Object Queries">
+If we see above, taken from the paper, they visualized 20 object queries, where each of the query, is getting information of presence of object at particular area, for differnet sizes of object, which is illustrated as three colors of green/red/purple. We can see that each object query has different area t concentrate for differnt object sizes.</p>
+<p>Than we after the decoder layer, passes the final sequence from decoder to the Feed Forward Netwrok, to get the <code>class_label</code> and the <code>bounding box</code> of the object for each object, and since we added <code>no object</code>, now the model can predict 100 objects in the image, and if there are less than the model predicts as no-objects for those object queries</p>
+<p><img src="/blog/images/copied_from_nb/../images/PanopticSegmentation/5_Decoder.png" alt="Decoder"></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Mask-Head">
+<a class="anchor" href="#Mask-Head" aria-hidden="true"><span class="octicon octicon-link"></span></a>Mask Head<a class="anchor-link" href="#Mask-Head"> </a>
+</h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered">
+<div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After the Bounding Box detection, now we add our mask head, which is used part of End-to-End model, to get Panoptic segmentation of the image.</p>
+<p>This is acheived by doing attention of the obejct queries of the classes on the encoded image which we saved and set aside after the <code>encoder transformer</code>, and each object query after going through attention on the encoded image, will result in a mask for the class of the object query.</p>
+<p><img src="/blog/images/copied_from_nb/../images/PanopticSegmentation/8_Box_Image_attn.png" alt="Mask"></p>
+<p>After getting these maps, which are of size <code>H/32 x W/32</code>, we would want to upscale the image and we now use an upsampling model, and also add the feature maps which we saved after every layer during the first step of ResNet forward pass.</p>
+<p><img src="/blog/images/copied_from_nb/../images/PanopticSegmentation/11_Res_Up.png" alt="Up"></p>
+<p>And finally we can do Pixel wise Arg max to achieve the final segmentation map.</p>
+<p><img src="/blog/images/copied_from_nb/../images/PanopticSegmentation/10_Panoptic.png" alt="FinalMask"></p>
 
 </div>
 </div>
