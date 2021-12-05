@@ -93,7 +93,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      5 min read
+      6 min read
     
 </span></p>
 
@@ -124,6 +124,7 @@ window.onload = wrap_img;
 <li class="toc-entry toc-h2"><a href="#ternery-operator">Ternery Operator</a></li>
 <li class="toc-entry toc-h2"><a href="#switch-and-case">Switch and Case</a></li>
 <li class="toc-entry toc-h2"><a href="#type-coercion">Type Coercion</a></li>
+<li class="toc-entry toc-h2"><a href="#end">END!</a></li>
 </ul>
 </li>
 </ul><h1 id="basics-of-javascript">
@@ -404,6 +405,37 @@ console.log(authenticated ? ‘Welcome’ : ‘Show login Options’);</p>
 <h2 id="type-coercion">
 <a class="anchor" href="#type-coercion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Type Coercion</h2>
 
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">"</span><span class="s2">2</span><span class="dl">"</span> <span class="o">+</span> <span class="mi">2</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">22</span>
+</code></pre></div></div>
+<p>🤯🤯🤯🤯 Whattttttttt…</p>
+
+<p>Java Scripts does <code class="language-plaintext highlighter-rouge">type coercion</code> which is convert one data type to another automatically when it faces any issue with the statement. Like in above example adding a <code class="language-plaintext highlighter-rouge">string</code> and a <code class="language-plaintext highlighter-rouge">number</code> is not possible, so JS automatically converts the <code class="language-plaintext highlighter-rouge">number</code> to <code class="language-plaintext highlighter-rouge">string</code> and concatenates the two.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">user</span> <span class="o">==</span> <span class="dl">"</span><span class="s2">2</span><span class="dl">"</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Condition should be false, but........</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">Condition</span> <span class="nx">should</span> <span class="nx">be</span> <span class="kc">false</span><span class="p">,</span> <span class="nx">but</span><span class="p">........</span> 
+</code></pre></div></div>
+
+<p>As discussed, here JavaScript does <code class="language-plaintext highlighter-rouge">type coercion</code> and convertes user which is number 2 to string “2”. So the condition is <code class="language-plaintext highlighter-rouge">true</code>.</p>
+
+<p>We can avoid this by using <code class="language-plaintext highlighter-rouge">===</code> operator.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">user</span> <span class="o">=</span> <span class="mi">2</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">user</span> <span class="o">===</span> <span class="dl">"</span><span class="s2">2</span><span class="dl">"</span><span class="p">){</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Condition should be false, but........</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span>
+</code></pre></div></div>
+
+<h2 id="end">
+<a class="anchor" href="#end" aria-hidden="true"><span class="octicon octicon-link"></span></a>END!</h2>
+<p>That is it for today, getting to know some basics in Java Script. We will see more in the upcoming days.</p>
+
+<blockquote>
+  <p>Note: This material is created as part of learning Java Script from various resource, like <a href="https://www.youtube.com/watch?v=2md4HQNRqJA&amp;list=PLRAV69dS1uWSxUIk5o3vQY2-_VKsOpXLD">Hitesh Choudhary’s JS Course</a> and <a href="https://www.youtube.com/watch?v=pN6jk0uUrD8&amp;list=PLlasXeu85E9cQ32gLCvAvr9vNaUccPVNP">Akshay Saini’s Namaste JS Course</a></p>
+</blockquote>
 
   </div><a class="u-url" href="/blog/javascript/beginner/2021/12/02/Intro-JS.html" hidden></a>
 </article>
