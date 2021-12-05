@@ -342,38 +342,26 @@ we use <code class="language-plaintext highlighter-rouge">Logical OR(||)</code> 
 
 <p>The ternery operator <code class="language-plaintext highlighter-rouge">?</code> whatever is before, if evaluated to <code class="language-plaintext highlighter-rouge">true</code> first expression is executed, otherwise the second expression is executed.</p>
 <blockquote>
-  <p>Syntax: <code class="language-plaintext highlighter-rouge">condition ? expression1 : expression2</code>
-```js
-var authenticated = true;</p>
+  <p>Syntax: <code class="language-plaintext highlighter-rouge">condition ? expression1 : expression2</code></p>
 </blockquote>
 
-<p>if (authenticated) {
-    console.log(‘Welcome’);
-}
-else {
-    console.log(‘Show login Options’);
-}</p>
-<blockquote>
-  <blockquote>
-    <blockquote>
-      <p>Welcome</p>
-    </blockquote>
-  </blockquote>
-</blockquote>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">authenticated</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
 
-<p>// Alternate shorted approach
-console.log(authenticated ? ‘Welcome’ : ‘Show login Options’);</p>
-<blockquote>
-  <blockquote>
-    <blockquote>
-      <p>Welcome
-```</p>
-      <h2 id="switch-and-case">
+<span class="k">if</span> <span class="p">(</span><span class="nx">authenticated</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Welcome</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Show login Options</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">Welcome</span>
+
+<span class="c1">// Alternate shorted approach</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">authenticated</span> <span class="p">?</span> <span class="dl">'</span><span class="s1">Welcome</span><span class="dl">'</span> <span class="p">:</span> <span class="dl">'</span><span class="s1">Show login Options</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">Welcome</span>
+</code></pre></div></div>
+<h2 id="switch-and-case">
 <a class="anchor" href="#switch-and-case" aria-hidden="true"><span class="octicon octicon-link"></span></a>Switch and Case</h2>
-      <p>The <code class="language-plaintext highlighter-rouge">switch</code> statement is used to perform different actions based on different conditions.</p>
-    </blockquote>
-  </blockquote>
-</blockquote>
+<p>The <code class="language-plaintext highlighter-rouge">switch</code> statement is used to perform different actions based on different conditions.</p>
 
 <p>Given a value, the <code class="language-plaintext highlighter-rouge">switch</code> statement evaluates the value and executes the code block(<code class="language-plaintext highlighter-rouge">case</code>) corresponding to the value.</p>
 
