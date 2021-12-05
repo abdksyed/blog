@@ -93,7 +93,7 @@ window.onload = wrap_img;
        • <span class="read-time" title="Estimated read time">
     
     
-      1 min read
+      5 min read
     
 </span></p>
 
@@ -117,6 +117,13 @@ window.onload = wrap_img;
 <ul>
 <li class="toc-entry toc-h2"><a href="#setup">Setup</a></li>
 <li class="toc-entry toc-h2"><a href="#hello-javascript">Hello Javascript</a></li>
+<li class="toc-entry toc-h2"><a href="#variables">Variables</a></li>
+<li class="toc-entry toc-h2"><a href="#operators">Operators</a></li>
+<li class="toc-entry toc-h2"><a href="#conditionals">Conditionals</a></li>
+<li class="toc-entry toc-h2"><a href="#nested-ifs-and-logical-operators">Nested ifs and Logical Operators.</a></li>
+<li class="toc-entry toc-h2"><a href="#ternery-operator">Ternery Operator</a></li>
+<li class="toc-entry toc-h2"><a href="#switch-and-case">Switch and Case</a></li>
+<li class="toc-entry toc-h2"><a href="#type-coercion">Type Coercion</a></li>
 </ul>
 </li>
 </ul><h1 id="basics-of-javascript">
@@ -160,6 +167,8 @@ window.onload = wrap_img;
 <span class="o">&gt;</span> <span class="nx">Hello</span> <span class="nx">Javascript</span>
 </code></pre></div></div>
 
+<h2 id="variables">
+<a class="anchor" href="#variables" aria-hidden="true"><span class="octicon octicon-link"></span></a>Variables</h2>
 <p>Java Script 3 major data types:</p>
 <ul>
   <li>number</li>
@@ -180,13 +189,221 @@ window.onload = wrap_img;
 <span class="o">&gt;</span> <span class="mi">47</span> <span class="nx">number</span>
 </code></pre></div></div>
 
+<p>The variables which are defined using <code class="language-plaintext highlighter-rouge">var</code> are given <code class="language-plaintext highlighter-rouge">undefined</code> as value, until they are assigned a value. This is done in the <code class="language-plaintext highlighter-rouge">Memory Creation</code> phase. Which we will be coming across in the future posts.</p>
+
 <div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">noVar</span><span class="p">;</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">noVar</span><span class="p">);</span>
-<span class="o">&gt;</span> <span class="kc">undefined</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="kc">undefined</span>
 <span class="nx">noVar</span> <span class="o">=</span> <span class="dl">"</span><span class="s2">I'm not a variable</span><span class="dl">"</span><span class="p">;</span>
 <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="nx">noVar</span><span class="p">);</span>
-<span class="o">&gt;</span> <span class="nx">I</span><span class="dl">'</span><span class="s1">m not a variable
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">I</span><span class="dl">'</span><span class="s1">m not a variable
 </span></code></pre></div></div>
+
+<p>We can take input from the user, for example in the browser we can use the <code class="language-plaintext highlighter-rouge">prompt</code> function to create a pop-up box, where the user can enter a value.</p>
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">takeInput</span><span class="p">;</span>
+<span class="nx">takeInput</span> <span class="o">=</span> <span class="nx">prompt</span><span class="p">(</span><span class="dl">"</span><span class="s2">Give me some Input</span><span class="dl">"</span><span class="p">);</span> 
+</code></pre></div></div>
+
+<p>For printing the varialbes in between string data and which is a multi-line we can use the interpolation. Notice how we are using backtick symbol to denote the start of the string and the backtick symbol again to denote the end of the string. And to have any varialbe we can use <code class="language-plaintext highlighter-rouge">${variable_name}</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`
+    This is a multi-line
+    string.
+    Where I can even call
+    variables. like </span><span class="p">${</span><span class="nx">fullName</span><span class="p">}</span><span class="s2">
+    and </span><span class="p">${</span><span class="nx">myNumber</span><span class="p">}</span><span class="s2">.
+`</span><span class="p">)</span>
+
+<span class="o">&gt;&gt;&gt;</span>
+    <span class="nx">This</span> <span class="nx">is</span> <span class="nx">a</span> <span class="nx">multi</span><span class="o">-</span><span class="nx">line</span>
+    <span class="nx">string</span><span class="p">.</span>
+    <span class="nx">Where</span> <span class="nx">I</span> <span class="nx">can</span> <span class="nx">even</span> <span class="nx">call</span>
+    <span class="nx">variables</span><span class="p">.</span> <span class="nx">like</span> <span class="nx">ThisIsMyName</span>
+    <span class="nx">and</span> <span class="mi">47</span><span class="p">.</span>
+</code></pre></div></div>
+
+<h2 id="operators">
+<a class="anchor" href="#operators" aria-hidden="true"><span class="octicon octicon-link"></span></a>Operators</h2>
+
+<p>We can use <code class="language-plaintext highlighter-rouge">+</code>, <code class="language-plaintext highlighter-rouge">-</code>, <code class="language-plaintext highlighter-rouge">*</code> and <code class="language-plaintext highlighter-rouge">/</code> to perform arithmetic operations.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">listPrice</span> <span class="o">=</span> <span class="mi">799</span>
+<span class="kd">var</span> <span class="nx">salePrice</span> <span class="o">=</span> <span class="mi">199</span>
+<span class="kd">var</span> <span class="nx">discount</span> <span class="o">=</span> <span class="p">(</span> <span class="p">(</span><span class="nx">listPrice</span> <span class="o">-</span> <span class="nx">salePrice</span><span class="p">)</span><span class="o">/</span><span class="nx">listPrice</span> <span class="p">)</span> <span class="o">*</span> <span class="mi">100</span><span class="p">;</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">discount</span><span class="p">}</span><span class="s2">%`</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mf">75.09386733416771</span><span class="o">%</span>
+</code></pre></div></div>
+
+<p>The asnwer which has so many decimal points can be made clean by using <code class="language-plaintext highlighter-rouge">round</code> functin from <code class="language-plaintext highlighter-rouge">Math</code>.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nx">displayDiscount</span> <span class="o">=</span> <span class="nb">Math</span><span class="p">.</span><span class="nx">round</span><span class="p">(</span><span class="nx">discount</span><span class="p">);</span>
+<span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="s2">`</span><span class="p">${</span><span class="nx">displayDiscount</span><span class="p">}</span><span class="s2">%`</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="mi">75</span><span class="o">%</span>
+</code></pre></div></div>
+
+<blockquote>
+  <p>Operator Precedence can be best understand from <a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence">here</a></p>
+</blockquote>
+
+<h2 id="conditionals">
+<a class="anchor" href="#conditionals" aria-hidden="true"><span class="octicon octicon-link"></span></a>Conditionals</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="dl">'</span><span class="s1"> </span><span class="dl">'</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is True</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">This</span> <span class="nx">is</span> <span class="nx">True</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is True</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">This</span> <span class="nx">is</span> <span class="nx">True</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="dl">'</span><span class="s1">FALSE</span><span class="dl">'</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is True</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">This</span> <span class="nx">is</span> <span class="nx">True</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="kc">true</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is True</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">This</span> <span class="nx">is</span> <span class="nx">True</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="kc">false</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is NOT going to be Printed</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is NOT going to be Printed</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="dl">''</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is NOT going to be Printed</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="kc">null</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is NOT going to be Printed</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is NOT going to be Printed</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+<span class="kd">var</span> <span class="nx">iAmGoingToBeUndefined</span><span class="p">;</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">iAmGoingToBeUndefined</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is NOT going to be Printed</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span>
+
+<span class="kd">var</span> <span class="nx">someArray</span> <span class="o">=</span> <span class="p">[];</span> <span class="c1">// new Array()</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">someArray</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is True</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">This</span> <span class="nx">is</span> <span class="nx">True</span>
+
+<span class="kd">var</span> <span class="nx">someObject</span> <span class="o">=</span> <span class="p">{};</span> <span class="c1">// new Object()</span>
+<span class="k">if</span> <span class="p">(</span><span class="nx">someObject</span><span class="p">)</span> <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">This is True</span><span class="dl">'</span><span class="p">);</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">This</span> <span class="nx">is</span> <span class="nx">True</span>
+</code></pre></div></div>
+
+<p>The <code class="language-plaintext highlighter-rouge">if</code> condition will be evaluated and run the code inside the block if the condition is true. So to run the code of <code class="language-plaintext highlighter-rouge">if</code> block the condition must be <code class="language-plaintext highlighter-rouge">Truthy</code>.</p>
+
+<p>In JavaScript, <code class="language-plaintext highlighter-rouge">0</code>, <code class="language-plaintext highlighter-rouge">false</code>, <code class="language-plaintext highlighter-rouge">''</code>,  <code class="language-plaintext highlighter-rouge">null</code>, <code class="language-plaintext highlighter-rouge">NaN</code>, <code class="language-plaintext highlighter-rouge">undefined</code> are <code class="language-plaintext highlighter-rouge">Falsy</code> values.<br>
+Remaining everything else is <code class="language-plaintext highlighter-rouge">Truthy</code>.</p>
+
+<h2 id="nested-ifs-and-logical-operators">
+<a class="anchor" href="#nested-ifs-and-logical-operators" aria-hidden="true"><span class="octicon octicon-link"></span></a>Nested ifs and Logical Operators.</h2>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">isEmployee</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">isLoggenIn</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">isAdmin</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">isEmployee</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="p">(</span><span class="nx">isLoggenIn</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="p">(</span><span class="nx">isAdmin</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Welcome Mr. Adminva</span><span class="dl">'</span><span class="p">);</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">Welcome</span> <span class="nx">Mr</span><span class="p">.</span> <span class="nx">Adminva</span>
+</code></pre></div></div>
+<p>The content will be printed only if <code class="language-plaintext highlighter-rouge">all</code> the three are true. But there is a better approach using <code class="language-plaintext highlighter-rouge">Logical AND (&amp;&amp;)</code> operator.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="p">(</span><span class="nx">isEmployee</span> <span class="o">&amp;&amp;</span> <span class="nx">isLoggenIn</span> <span class="o">&amp;&amp;</span> <span class="nx">isAdmin</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Welcome Mr. Adminva</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">You are not authorized</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">Welcome</span> <span class="nx">Mr</span><span class="p">.</span> <span class="nx">Adminva</span>
+</code></pre></div></div>
+
+<p>Similary if we want to pass the condition if <code class="language-plaintext highlighter-rouge">any</code> of the condition is true, then 
+we use <code class="language-plaintext highlighter-rouge">Logical OR(||)</code> operator.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">isMom</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">isDad</span> <span class="o">=</span> <span class="kc">false</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">isSister</span> <span class="o">=</span> <span class="kc">true</span><span class="p">;</span>
+
+<span class="k">if</span> <span class="p">(</span><span class="nx">isMom</span> <span class="o">||</span> <span class="nx">isDad</span> <span class="o">||</span> <span class="nx">isSister</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">You are a family member</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">else</span> <span class="p">{</span>
+    <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Kaun hai miya tum??r</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">You</span> <span class="nx">are</span> <span class="nx">a</span> <span class="nx">family</span> <span class="nx">member</span>
+</code></pre></div></div>
+
+<h2 id="ternery-operator">
+<a class="anchor" href="#ternery-operator" aria-hidden="true"><span class="octicon octicon-link"></span></a>Ternery Operator</h2>
+
+<p>The ternery operator <code class="language-plaintext highlighter-rouge">?</code> whatever is before, if evaluated to <code class="language-plaintext highlighter-rouge">true</code> first expression is executed, otherwise the second expression is executed.</p>
+<blockquote>
+  <p>Syntax: <code class="language-plaintext highlighter-rouge">condition ? expression1 : expression2</code>
+```js
+var authenticated = true;</p>
+</blockquote>
+
+<p>if (authenticated) {
+    console.log(‘Welcome’);
+}
+else {
+    console.log(‘Show login Options’);
+}</p>
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Welcome</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>// Alternate shorted approach
+console.log(authenticated ? ‘Welcome’ : ‘Show login Options’);</p>
+<blockquote>
+  <blockquote>
+    <blockquote>
+      <p>Welcome
+```</p>
+      <h2 id="switch-and-case">
+<a class="anchor" href="#switch-and-case" aria-hidden="true"><span class="octicon octicon-link"></span></a>Switch and Case</h2>
+      <p>The <code class="language-plaintext highlighter-rouge">switch</code> statement is used to perform different actions based on different conditions.</p>
+    </blockquote>
+  </blockquote>
+</blockquote>
+
+<p>Given a value, the <code class="language-plaintext highlighter-rouge">switch</code> statement evaluates the value and executes the code block(<code class="language-plaintext highlighter-rouge">case</code>) corresponding to the value.</p>
+
+<div class="language-js highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">var</span> <span class="nx">userType</span> <span class="o">=</span> <span class="dl">'</span><span class="s1">Analyst</span><span class="dl">'</span><span class="p">;</span>
+
+<span class="k">switch</span> <span class="p">(</span><span class="nx">userType</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="dl">'</span><span class="s1">Manager</span><span class="dl">'</span><span class="p">:</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Welcome Manager</span><span class="dl">'</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="dl">'</span><span class="s1">Admin</span><span class="dl">'</span><span class="p">:</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Welcome Admin</span><span class="dl">'</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="dl">'</span><span class="s1">Developer</span><span class="dl">'</span><span class="p">:</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Welcome Developer</span><span class="dl">'</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="dl">'</span><span class="s1">Tester</span><span class="dl">'</span><span class="p">:</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Welcome Tester</span><span class="dl">'</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="k">case</span> <span class="dl">'</span><span class="s1">Analyst</span><span class="dl">'</span><span class="p">:</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Welcome Analyst</span><span class="dl">'</span><span class="p">);</span>
+        <span class="k">break</span><span class="p">;</span>
+    <span class="nl">default</span><span class="p">:</span>
+        <span class="nx">console</span><span class="p">.</span><span class="nx">log</span><span class="p">(</span><span class="dl">'</span><span class="s1">Welcome</span><span class="dl">'</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="nx">Welcome</span> <span class="nx">Analyst</span>
+</code></pre></div></div>
+<p>If we look carefully, we have a <code class="language-plaintext highlighter-rouge">break</code> after each case, because we want to stop the execution of the code block after the case is executed. If we don’t have the break statement, the code block will be executed for all the cases which are the below the current case.</p>
+
+<h2 id="type-coercion">
+<a class="anchor" href="#type-coercion" aria-hidden="true"><span class="octicon octicon-link"></span></a>Type Coercion</h2>
+
 
   </div><a class="u-url" href="/blog/javascript/beginner/2021/12/02/Intro-JS.html" hidden></a>
 </article>
